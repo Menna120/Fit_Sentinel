@@ -21,7 +21,7 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.Fit_Sentinel">
+            android:theme="@style/Theme.Fit_Sentinel.Splash_screen">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
