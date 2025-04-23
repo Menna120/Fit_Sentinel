@@ -23,7 +23,7 @@ fun Arc(
     currentValue: Int,
     targetValue: Int,
     modifier: Modifier = Modifier,
-    arcWidth: Dp = 48.dp,
+    arcWidth: Dp = 24.dp,
     startAngle: Float = 135f,
     totalAngle: Float = 270f,
     arcBackgroundColor: Color = Black.copy(alpha = 0.15f),

@@ -29,10 +29,10 @@ import com.example.fit_sentinel.ui.theme.Fit_SentinelTheme
 fun StepProgressDisplay(
     steps: Int,
     targetSteps: Int,
+    onButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
     labelText: String = "Steps",
     buttonIcon: ImageVector = Icons.Default.PlayArrow,
-    onButtonClick: () -> Unit,
     labelColor: Color = Black.copy(alpha = .5f),
     stepsColor: Color = Black,
     buttonBackgroundColor: Color = MaterialTheme.colorScheme.primary,

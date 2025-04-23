@@ -34,7 +34,7 @@ fun InfoCard(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(8.dp),
+                .padding(4.dp),
             verticalArrangement = Arrangement.SpaceEvenly,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -52,7 +52,7 @@ fun InfoCard(
             Text(
                 text = unit,
                 modifier = Modifier.alpha(.5f),
-                style = MaterialTheme.typography.labelSmall
+                style = MaterialTheme.typography.bodyMedium
             )
         }
     }
