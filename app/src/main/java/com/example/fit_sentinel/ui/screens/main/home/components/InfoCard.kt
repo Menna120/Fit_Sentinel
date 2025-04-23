@@ -1,4 +1,4 @@
-package com.example.fit_sentinel.ui.screens.main.home
+package com.example.fit_sentinel.ui.screens.main.home.components
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Arrangement
