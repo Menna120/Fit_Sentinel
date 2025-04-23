@@ -1,4 +1,4 @@
-package com.example.fit_sentinel.ui.common.ruler
+package com.example.fit_sentinel.ui.common
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Canvas

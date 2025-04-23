@@ -1,4 +1,4 @@
-package com.example.fit_sentinel.ui.common.monitor_data
+package com.example.fit_sentinel.ui.screens.main.home
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -27,9 +27,9 @@ fun MonitorRow(
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        MonitorCard(R.drawable.time, time, "Time", Modifier.weight(weight))
-        MonitorCard(R.drawable.calories, calories, "Kcal", Modifier.weight(weight))
-        MonitorCard(R.drawable.walk, distance, "Km", Modifier.weight(weight))
+        InfoCard(R.drawable.time, time, "Time", Modifier.weight(weight))
+        InfoCard(R.drawable.calories, calories, "Kcal", Modifier.weight(weight))
+        InfoCard(R.drawable.walk, distance, "Km", Modifier.weight(weight))
     }
 }
 

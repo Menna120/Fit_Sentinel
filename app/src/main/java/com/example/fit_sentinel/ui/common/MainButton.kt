@@ -42,7 +42,7 @@ fun MainButton(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(text, style = MaterialTheme.typography.titleLarge)
+            Text(text, style = MaterialTheme.typography.headlineMedium)
             if (showIcon) {
                 Spacer(modifier = Modifier.weight(1f))
                 Icon(
