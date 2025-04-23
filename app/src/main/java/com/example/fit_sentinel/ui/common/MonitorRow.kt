@@ -1,4 +1,4 @@
-package com.example.fit_sentinel.ui.screens.main.home
+package com.example.fit_sentinel.ui.common
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.fit_sentinel.R
+import com.example.fit_sentinel.ui.screens.main.home.components.InfoCard
 import com.example.fit_sentinel.ui.theme.Fit_SentinelTheme
 
 @Composable
