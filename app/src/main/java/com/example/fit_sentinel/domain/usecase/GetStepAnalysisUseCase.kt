@@ -6,9 +6,8 @@ import com.example.fit_sentinel.domain.repository.StepRepository
 import javax.inject.Inject
 
 class GetStepAnalysisUseCase @Inject constructor(
-    private val repository: StepRepository
+    private val stepRepository: StepRepository
 ) {
-    suspend operator fun invoke(request: AnalysisRequest): Result<AnalysisResponse> {
-        return repository.getStepAnalysis(request)
-    }
+    suspend operator fun invoke(request: AnalysisRequest): Result<AnalysisResponse> =
+        stepRepository.getStepAnalysis(request)
 }

@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -41,20 +40,16 @@ fun StepProgressDisplay(
     Arc(steps, targetSteps, modifier) {
         Column(
             modifier = Modifier.fillMaxHeight(),
-            verticalArrangement = Arrangement.spacedBy(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(top = 82.dp)
+                verticalArrangement = Arrangement.SpaceEvenly,
+                modifier = Modifier.weight(1f)
             ) {
                 Text(
                     text = labelText,
                     color = labelColor,
-                    modifier = Modifier.padding(bottom = 8.dp),
                     style = MaterialTheme.typography.titleMedium
                 )
 
@@ -67,18 +62,14 @@ fun StepProgressDisplay(
                 Text(
                     text = targetSteps.toString(),
                     color = labelColor,
-                    modifier = Modifier.padding(bottom = 8.dp),
                     style = MaterialTheme.typography.titleMedium
                 )
-
             }
 
             Button(
                 onClick = onButtonClick,
                 colors = ButtonDefaults.buttonColors(containerColor = buttonBackgroundColor),
-                modifier = Modifier
-                    .padding(bottom = 16.dp)
-                    .size(56.dp),
+                modifier = Modifier.size(50.dp),
                 shape = CircleShape,
                 contentPadding = PaddingValues(0.dp)
             ) {

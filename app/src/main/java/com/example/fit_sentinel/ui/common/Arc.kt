@@ -2,10 +2,11 @@ package com.example.fit_sentinel.ui.common
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
-import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -23,15 +24,16 @@ fun Arc(
     currentValue: Int,
     targetValue: Int,
     modifier: Modifier = Modifier,
+    size: Dp = 250.dp,
     arcWidth: Dp = 24.dp,
     startAngle: Float = 135f,
     totalAngle: Float = 270f,
     arcBackgroundColor: Color = Black.copy(alpha = 0.15f),
     arcProgressColor: Color = MaterialTheme.colorScheme.primary,
-    content: @Composable (BoxScope.() -> Unit)
+    content: @Composable (ColumnScope.() -> Unit)
 ) {
     Box(
-        modifier = modifier.aspectRatio(1f),
+        modifier = modifier.size(size),
         contentAlignment = Alignment.Center
     ) {
         Canvas(
@@ -66,8 +68,14 @@ fun Arc(
                 )
             }
         }
+        Column(
+            modifier = Modifier
+                .padding(top = arcWidth)
+                .fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) { content() }
 
-        content()
+
     }
 }
 

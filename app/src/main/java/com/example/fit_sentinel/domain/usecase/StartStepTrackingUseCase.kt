@@ -4,7 +4,7 @@ import com.example.fit_sentinel.domain.repository.StepRepository
 import javax.inject.Inject
 
 class StartStepTrackingUseCase @Inject constructor(
-    private val repository: StepRepository
+    private val stepRepository: StepRepository
 ) {
-    operator fun invoke() = repository.startStepTracking()
+    operator fun invoke() = stepRepository.startStepTracking()
 }

@@ -32,11 +32,23 @@ class StepSensorManagerImpl @Inject constructor(
     private var initialHardwareSteps: Float? = null
 
     private var accelerometerStepCount = 0
+
+    // Timestamp of the last detected step in nanoseconds.
     private var lastStepTimeNs: Long = 0
+
+    // Threshold for accelerometer magnitude to detect a potential step peak.
     private val magnitudeThreshold = 11.5f
+
+    // Minimum time required between steps in nanoseconds to filter out noise/vibration.
     private val stepTimeNsThreshold: Long = 250_000_000
-    private val filterAlpha = 0.8f
+
+    // Alpha for the low-pass filter on accelerometer magnitude.
+    private val filterAlpha = 0.8f // Value between 0 and 1. Higher alpha = more smoothing.
+
+    // Stores the last filtered magnitude value.
     private var lastMagnitude = 0f
+
+    private var lastGyroEvent: SensorEvent? = null
 
     init {
         determineSensorMode()
@@ -53,12 +65,19 @@ class StepSensorManagerImpl @Inject constructor(
             gyroscopeSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
             if (accelerometerSensor != null) {
                 _currentMode.value = SensorMode.ACCELEROMETER
-                Log.i("StepSensorManager", "Falling back to Accelerometer sensor.")
+                if (gyroscopeSensor != null) {
+                    Log.i("StepSensorManager", "Falling back to Accelerometer + Gyroscope sensors.")
+                } else {
+                    Log.w(
+                        "StepSensorManager",
+                        "Falling back to Accelerometer sensor (Gyroscope not available). Accuracy may be lower."
+                    )
+                }
             } else {
                 _currentMode.value = SensorMode.UNAVAILABLE
                 Log.e(
                     "StepSensorManager",
-                    "Critical: Neither Step Counter nor Accelerometer sensor found!"
+                    "Critical: Neither Step Counter nor Accelerometer sensor found! Step tracking unavailable."
                 )
             }
         }
@@ -70,93 +89,97 @@ class StepSensorManagerImpl @Inject constructor(
             return
         }
 
-        // Reset session steps regardless of mode
         _sessionSteps.value = 0
 
         when (_currentMode.value) {
             SensorMode.HARDWARE -> {
-                initialHardwareSteps = null // Reset baseline for hardware counter
+                initialHardwareSteps = null
                 val registered = sensorManager.registerListener(
                     this,
                     stepCounterSensor,
-                    SensorManager.SENSOR_DELAY_NORMAL // Lower power for hardware counter
+                    SensorManager.SENSOR_DELAY_NORMAL
                 )
                 Log.d("StepSensorManager", "Registered HARDWARE listener: $registered")
             }
 
             SensorMode.ACCELEROMETER -> {
-                accelerometerStepCount = 0 // Reset algorithm count
+                accelerometerStepCount = 0
                 lastStepTimeNs = 0
-                lastMagnitude = 0f // Reset filter state
-                // Use a faster delay for accelerometer to catch step peaks reliably
-                val registered = sensorManager.registerListener(
+                lastMagnitude = 0f
+                lastGyroEvent = null
+
+                val registeredAccel = sensorManager.registerListener(
                     this,
                     accelerometerSensor,
-                    SensorManager.SENSOR_DELAY_GAME // Or SENSOR_DELAY_UI. Test for balance.
+                    SensorManager.SENSOR_DELAY_GAME
                 )
-                // Register Gyroscope if using it
-                 if (gyroscopeSensor != null) sensorManager.registerListener(this, gyroscopeSensor, SensorManager.SENSOR_DELAY_GAME)
-                Log.d("StepSensorManager", "Registered ACCELEROMETER listener: $registered")
+                Log.d("StepSensorManager", "Registered ACCELEROMETER listener: $registeredAccel")
+
+                if (gyroscopeSensor != null) {
+                    val registeredGyro = sensorManager.registerListener(
+                        this,
+                        gyroscopeSensor,
+                        SensorManager.SENSOR_DELAY_GAME
+                    )
+                    Log.d("StepSensorManager", "Registered GYROSCOPE listener: $registeredGyro")
+                }
+
                 Log.w(
                     "StepSensorManager",
-                    "Accelerometer mode active: Battery consumption will be higher."
+                    "Accelerometer mode active: Battery consumption will be higher than hardware mode."
                 )
             }
 
-            SensorMode.UNAVAILABLE -> {} // Should not happen if isSensorAvailable is checked
+            SensorMode.UNAVAILABLE -> {
+                Log.w("StepSensorManager", "Attempted to start listening in UNAVAILABLE mode.")
+            }
         }
     }
 
     override fun stopListening() {
-        sensorManager.unregisterListener(this) // Unregisters all listeners for this instance
+        sensorManager.unregisterListener(this)
         Log.d("StepSensorManager", "Unregistered sensor listeners.")
-        // Optionally reset internal states if desired when stopped
-        // initialHardwareSteps = null
-        // accelerometerStepCount = 0
     }
 
     override fun onSensorChanged(event: SensorEvent?) {
         event ?: return
 
-        when (_currentMode.value) {
-            SensorMode.HARDWARE -> {
-                if (event.sensor.type == Sensor.TYPE_STEP_COUNTER) {
+        when (event.sensor.type) {
+            Sensor.TYPE_STEP_COUNTER -> {
+                if (_currentMode.value == SensorMode.HARDWARE) {
                     handleHardwareStepEvent(event)
                 }
             }
 
-            SensorMode.ACCELEROMETER -> {
-                if (event.sensor.type == Sensor.TYPE_ACCELEROMETER) {
+            Sensor.TYPE_ACCELEROMETER -> {
+                if (_currentMode.value == SensorMode.ACCELEROMETER) {
                     handleAccelerometerEvent(event)
                 }
-                 else if (event.sensor.type == Sensor.TYPE_GYROSCOPE && gyroscopeSensor != null) {
-                     handleGyroscopeEvent(event) // If using gyro
-                 }
             }
 
-            SensorMode.UNAVAILABLE -> {
-                // Should not receive events if unavailable, but good practice to handle
+            Sensor.TYPE_GYROSCOPE -> {
+                if (_currentMode.value == SensorMode.ACCELEROMETER && gyroscopeSensor != null) {
+                    handleGyroscopeEvent(event)
+                }
             }
         }
     }
 
-    // --- Event Handlers ---
-
     private fun handleHardwareStepEvent(event: SensorEvent) {
         val currentRawSteps = event.values[0]
+
         if (initialHardwareSteps == null) {
-            // First event after starting, set the baseline
             initialHardwareSteps = currentRawSteps
             _sessionSteps.value = 0
             Log.d("StepSensorManager", "HARDWARE Initialized. Baseline: $initialHardwareSteps")
         } else {
-            // Calculate steps taken since baseline
             val stepsTaken = (currentRawSteps - (initialHardwareSteps ?: currentRawSteps)).toInt()
-            if (stepsTaken >= _sessionSteps.value) { // Ensure non-decreasing count (handles potential small fluctuations)
-                if (stepsTaken < 0) { // Indicates a potential sensor reset (e.g., reboot)
+
+            if (stepsTaken >= _sessionSteps.value) {
+                if (stepsTaken < 0) {
                     Log.w(
                         "StepSensorManager",
-                        "HARDWARE step counter reset detected. Re-initializing."
+                        "HARDWARE step counter reset detected. Re-initializing baseline."
                     )
                     initialHardwareSteps = currentRawSteps
                     _sessionSteps.value = 0
@@ -164,50 +187,84 @@ class StepSensorManagerImpl @Inject constructor(
                     _sessionSteps.value = stepsTaken
                 }
             } else if (currentRawSteps < (initialHardwareSteps ?: 0f)) {
-                // If raw value drops below initial baseline, likely a reset
                 Log.w(
                     "StepSensorManager",
-                    "HARDWARE step counter reset detected (below baseline). Re-initializing."
+                    "HARDWARE step counter reset detected (raw value below baseline). Re-initializing."
                 )
                 initialHardwareSteps = currentRawSteps
                 _sessionSteps.value = 0
             }
-            // Log.d("StepSensorManager", "Raw: $currentRawSteps, Baseline: $initialHardwareSteps, Session: ${_sessionSteps.value}")
+            Log.d(
+                "StepSensorManager",
+                "Raw: $currentRawSteps, Baseline: $initialHardwareSteps, Session: ${_sessionSteps.value}"
+            )
         }
     }
 
     private fun handleAccelerometerEvent(event: SensorEvent) {
         val currentTimeNs = event.timestamp
 
-        // 1. Calculate magnitude
         val x = event.values[0]
         val y = event.values[1]
         val z = event.values[2]
         var magnitude = sqrt(x * x + y * y + z * z)
 
-        // 2. Apply simple low-pass filter (optional but recommended)
         magnitude = filterAlpha * lastMagnitude + (1 - filterAlpha) * magnitude
         lastMagnitude = magnitude
 
-        // 3. Peak Detection Logic (Simplified)
-        // Check if magnitude crosses threshold AND enough time has passed
-        // This simple check might need refinement (e.g., checking for peak *shape*)
-        if (magnitude > magnitudeThreshold && (currentTimeNs - lastStepTimeNs > stepTimeNsThreshold)) {
-            // Optional: Add gyroscope check here to filter non-walking movements if implemented
-            // if (isLikelyWalkingBasedOnGyro()) { ... }
+        val isPeakCandidate = magnitude > magnitudeThreshold
+        val isEnoughTimePassed = (currentTimeNs - lastStepTimeNs > stepTimeNsThreshold)
 
+        val isLikelyWalking = isLikelyWalkingBasedOnGyro()
+
+
+        if (isPeakCandidate && isEnoughTimePassed) {
             accelerometerStepCount++
-            _sessionSteps.value = accelerometerStepCount // Update the public flow
+            _sessionSteps.value =
+                accelerometerStepCount
             lastStepTimeNs = currentTimeNs
-             Log.d("StepSensorManager", "ACCEL Step Detected! Count: $accelerometerStepCount, Mag: $magnitude")
+
+            Log.d(
+                "StepSensorManager",
+                "ACCEL Step Detected! Count: $accelerometerStepCount, Mag: $magnitude, Gyro Validation: $isLikelyWalking"
+            )
         }
     }
 
-    // Placeholder for potential Gyroscope processing
-     private fun handleGyroscopeEvent(event: SensorEvent) {
-         // Analyze event.values[0], event.values[1], event.values[2] (angular velocity)
-         // Use this data to potentially validate if accelerometer peaks correspond to walking motion
-     }
+    private fun handleGyroscopeEvent(event: SensorEvent) {
+        lastGyroEvent = event
+//        Log.d(
+//            "StepSensorManager",
+//            "GYRO Event: x=${event.values[0]}, y=${event.values[1]}, z=${event.values[2]}"
+//        )
+    }
+
+    private fun isLikelyWalkingBasedOnGyro(): Boolean {
+        // TODO: Implement sophisticated logic here.
+        // Analyze lastGyroEvent (angular velocity).
+        // Typical walking involves rhythmic rotations around certain axes.
+        // You might look for:
+        // - Peaks in angular velocity that correlate with accelerometer peaks.
+        // - Specific patterns or ranges of angular velocity.
+        // - State machine based on accelerometer and gyroscope patterns.
+
+        // Example (very basic, not accurate): Check if there's *any* significant rotation
+        val gyroEvent =
+            lastGyroEvent ?: return true // If no gyro data, assume walking (less accurate)
+
+        val gyroX = gyroEvent.values[0]
+        val gyroY = gyroEvent.values[1]
+        val gyroZ = gyroEvent.values[2]
+
+        val angularVelocityMagnitude = sqrt(gyroX * gyroX + gyroY * gyroY + gyroZ * gyroZ)
+
+        // Define example thresholds based on experimentation.
+        // A more robust algorithm would analyze patterns over time.
+        val isRotating = angularVelocityMagnitude > 0.5 // Example: Check if there's some rotation
+
+        return isRotating // This is overly simplistic; needs real algorithm
+    }
+
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
         val sensorName = when (sensor?.type) {
@@ -224,6 +281,5 @@ class StepSensorManagerImpl @Inject constructor(
             else -> "Unknown ($accuracy)"
         }
         Log.i("StepSensorManager", "Accuracy changed for $sensorName: $accuracyLevel")
-        // You might want to notify the user if accuracy becomes unreliable, especially for accelerometer
     }
 }

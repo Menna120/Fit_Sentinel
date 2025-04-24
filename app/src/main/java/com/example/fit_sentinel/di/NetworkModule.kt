@@ -16,6 +16,9 @@ import javax.inject.Singleton
 object NetworkModule {
 
     @Provides
+    fun provideBaseUrl(): String = "https://your_api_base_url.com/"
+
+    @Provides
     @Singleton
     fun provideOkHttpClient(): OkHttpClient {
         val logging = HttpLoggingInterceptor()
@@ -27,12 +30,11 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
-        return Retrofit
-            .Builder()
-            .baseUrl("https://BASE_URL")
-            .client(okHttpClient)
+    fun provideRetrofit(baseUrl: String): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(baseUrl)
             .addConverterFactory(GsonConverterFactory.create())
+            .client(provideOkHttpClient())
             .build()
     }
 

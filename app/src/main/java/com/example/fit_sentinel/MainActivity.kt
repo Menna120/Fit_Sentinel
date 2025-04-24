@@ -8,7 +8,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import com.example.fit_sentinel.ui.screens.StepCounterScreen
+import com.example.fit_sentinel.ui.nav.nav_graph.NavGraph
+import com.example.fit_sentinel.ui.nav.nav_graph.main_nav.Main
 import com.example.fit_sentinel.ui.theme.Fit_SentinelTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -23,7 +24,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    StepCounterScreen()
+                    NavGraph(Main, Modifier.fillMaxSize())
                 }
             }
         }

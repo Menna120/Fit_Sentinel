@@ -58,13 +58,17 @@ fun HomeLayout(
 
         MonthDayPicker(
             selectedDate = selectedDate,
-            onDateSelected = onDateSelected,
-            modifier = Modifier.padding(horizontal = 8.dp)
+            onDateSelected = onDateSelected
         )
 
         TargetStepsCard(targetSteps, Modifier.align(Alignment.CenterHorizontally))
 
-        StepProgressDisplay(steps, targetSteps, onButtonClick, Modifier.padding(horizontal = 32.dp))
+        StepProgressDisplay(
+            steps,
+            targetSteps,
+            onButtonClick,
+            Modifier.align(Alignment.CenterHorizontally)
+        )
 
         MonitorRow(time, calories, distance)
     }

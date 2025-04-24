@@ -3,6 +3,7 @@ package com.example.fit_sentinel.ui.nav.bottom_nav_bar
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
@@ -29,7 +30,9 @@ fun BottomNavBar(
     modifier: Modifier = Modifier
 ) {
     NavigationBar(
-        modifier = modifier.clip(CircleShape),
+        modifier = modifier
+            .clip(CircleShape)
+            .heightIn(max = 60.dp),
         containerColor = MaterialTheme.colorScheme.primary
     ) {
         navItems.forEach { item ->
@@ -58,7 +61,8 @@ fun BottomNavBar(
                                 if (selected) Modifier
                                     .clip(CircleShape)
                                     .background(indicatorBackgroundColor)
-                                    .padding(8.dp) else Modifier
+                                    .padding(8.dp)
+                                else Modifier
                             ),
                         tint = iconColor
                     )
