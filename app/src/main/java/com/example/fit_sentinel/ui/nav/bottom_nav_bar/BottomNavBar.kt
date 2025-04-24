@@ -1,9 +1,9 @@
 package com.example.fit_sentinel.ui.nav.bottom_nav_bar
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -11,13 +11,14 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.example.fit_sentinel.ui.nav.nav_graph.main_nav.HomeRoute
 import com.example.fit_sentinel.ui.theme.Fit_SentinelTheme
 
@@ -32,23 +33,35 @@ fun BottomNavBar(
         containerColor = MaterialTheme.colorScheme.primary
     ) {
         navItems.forEach { item ->
+            val selected = isSelected(item)
+
+            val indicatorBackgroundColor by animateColorAsState(
+                targetValue = if (selected) MaterialTheme.colorScheme.background else Color.Transparent,
+                animationSpec = tween(durationMillis = 300),
+                label = "indicator background color animation"
+            )
+
+            val iconColor by animateColorAsState(
+                targetValue = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.background,
+                animationSpec = tween(durationMillis = 300), label = "icon color animation"
+            )
+
             NavigationBarItem(
                 selected = isSelected(item),
                 onClick = { onItemClick(item) },
                 icon = {
-                    Box(
+                    Icon(
+                        imageVector = ImageVector.vectorResource(id = item.icon),
+                        contentDescription = "",
                         modifier = Modifier
-                            .clip(CircleShape)
-                            .fillMaxHeight(.7f)
-                            .aspectRatio(1f)
-                            .background(if (isSelected(item)) MaterialTheme.colorScheme.background else Color.Transparent)
-                    ) {
-                        Icon(
-                            imageVector = ImageVector.vectorResource(id = item.icon),
-                            contentDescription = "",
-                            modifier = Modifier.align(Alignment.Center)
-                        )
-                    }
+                            .then(
+                                if (selected) Modifier
+                                    .clip(CircleShape)
+                                    .background(indicatorBackgroundColor)
+                                    .padding(8.dp) else Modifier
+                            ),
+                        tint = iconColor
+                    )
                 },
                 colors = NavigationBarItemDefaults.colors(
                     indicatorColor = Color.Transparent,
