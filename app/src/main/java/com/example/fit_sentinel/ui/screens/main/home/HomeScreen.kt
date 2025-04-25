@@ -21,8 +21,8 @@ fun HomeScreen(
         time = uiState.time,
         calories = uiState.calories,
         distance = uiState.distance,
-        onPreviousMonth = viewModel::onPreviousMonthClicked,
-        onNextMonth = viewModel::onNextMonthClicked,
+        onPreviousMonth = viewModel::onPreviousWeekClicked,
+        onNextMonth = viewModel::onNextWeekClicked,
         onDateSelected = viewModel::onDateSelected,
         onButtonClick = viewModel::onStepProgressButtonClicked,
         modifier = modifier
