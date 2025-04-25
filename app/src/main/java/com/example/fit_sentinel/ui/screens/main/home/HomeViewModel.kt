@@ -9,6 +9,7 @@ import com.example.fit_sentinel.domain.usecase.GetTodaySavedStepsUseCase
 import com.example.fit_sentinel.domain.usecase.StartStepTrackingUseCase
 import com.example.fit_sentinel.domain.usecase.StopStepTrackingUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import ir.ehsannarmani.compose_charts.extensions.format
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -81,7 +82,7 @@ class HomeViewModel @Inject constructor(
             ) {
                 _uiState.update {
                     it.copy(
-                        distance = String.format("%.1f km", selectedDayData.distanceKm),
+                        distance = "${selectedDayData.distanceKm.format(1)} Km",
                         calories = "${selectedDayData.caloriesBurned.roundToInt()} kcal",
                         time = formatMinutesToHoursAndMinutes(selectedDayData.estimatedTimeMinutes)
                     )
@@ -97,7 +98,7 @@ class HomeViewModel @Inject constructor(
             val metrics = calculateStepMetricsUseCase(steps)
             _uiState.update {
                 it.copy(
-                    distance = String.format("%.1f km", metrics.distanceKm),
+                    distance = "${metrics.distanceKm.format(1)} Km",
                     calories = "${metrics.caloriesBurned.roundToInt()} kcal",
                     time = formatMinutesToHoursAndMinutes(metrics.estimatedTimeMinutes)
                 )
@@ -113,14 +114,14 @@ class HomeViewModel @Inject constructor(
     }
 
 
-    fun onPreviousMonthClicked() {
-        val newDate = _uiState.value.selectedDate.minusMonths(1)
+    fun onPreviousWeekClicked() {
+        val newDate = _uiState.value.selectedDate.minusWeeks(1)
         _uiState.update { it.copy(selectedDate = newDate) }
         updateStepsForSelectedDate(newDate)
     }
 
-    fun onNextMonthClicked() {
-        val newDate = _uiState.value.selectedDate.plusMonths(1)
+    fun onNextWeekClicked() {
+        val newDate = _uiState.value.selectedDate.plusWeeks(1)
         _uiState.update { it.copy(selectedDate = newDate) }
         updateStepsForSelectedDate(newDate)
     }
