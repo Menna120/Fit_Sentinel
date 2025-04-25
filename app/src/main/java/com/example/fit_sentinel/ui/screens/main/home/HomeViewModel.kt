@@ -16,7 +16,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.DayOfWeek
 import java.time.LocalDate
+import java.time.temporal.TemporalAdjusters
 import javax.inject.Inject
 import kotlin.math.roundToInt
 
@@ -115,13 +117,17 @@ class HomeViewModel @Inject constructor(
 
 
     fun onPreviousWeekClicked() {
-        val newDate = _uiState.value.selectedDate.minusWeeks(1)
+        val newDate = _uiState.value.selectedDate
+            .with(TemporalAdjusters.previousOrSame(DayOfWeek.SATURDAY))
+            .minusWeeks(1)
         _uiState.update { it.copy(selectedDate = newDate) }
         updateStepsForSelectedDate(newDate)
     }
 
     fun onNextWeekClicked() {
-        val newDate = _uiState.value.selectedDate.plusWeeks(1)
+        val newDate = _uiState.value.selectedDate
+            .with(TemporalAdjusters.previousOrSame(DayOfWeek.SATURDAY))
+            .plusWeeks(1)
         _uiState.update { it.copy(selectedDate = newDate) }
         updateStepsForSelectedDate(newDate)
     }

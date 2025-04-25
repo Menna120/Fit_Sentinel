@@ -21,10 +21,11 @@ import androidx.compose.ui.unit.dp
 import com.example.fit_sentinel.ui.theme.Black
 import com.example.fit_sentinel.ui.theme.Fit_SentinelTheme
 import java.time.LocalDate
-import java.time.YearMonth
+import java.time.temporal.TemporalAdjusters
+import java.time.temporal.WeekFields
 
 @Composable
-fun MonthDayPicker(
+fun WeekDayPicker(
     selectedDate: LocalDate,
     onDateSelected: (LocalDate) -> Unit,
     modifier: Modifier = Modifier,
@@ -34,15 +35,14 @@ fun MonthDayPicker(
     selectedTextColor: Color = MaterialTheme.colorScheme.onPrimary,
     unselectedTextColor: Color = Black.copy(alpha = .2f),
 ) {
-    val targetMonth = selectedDate.month
-    val targetYear = selectedDate.year
+    val weekFields = WeekFields.of(java.util.Locale.getDefault())
+    val weekNumber = selectedDate.get(weekFields.weekOfWeekBasedYear())
 
-    val dates = remember(targetYear, targetMonth) {
-        val yearMonth = YearMonth.of(targetYear, targetMonth)
-        val firstDayOfMonth = yearMonth.atDay(1)
-        val daysInMonth = yearMonth.lengthOfMonth()
+    val dates = remember(selectedDate.dayOfWeek, weekNumber) {
 
-        List(daysInMonth) { i -> firstDayOfMonth.plusDays(i.toLong()) }
+        val firstDayOfWeek =
+            selectedDate.with(TemporalAdjusters.previousOrSame(java.time.DayOfWeek.SATURDAY))
+        List(7) { i -> firstDayOfWeek.plusDays(i.toLong()) }
     }
 
     val listState = rememberLazyListState()
@@ -81,10 +81,10 @@ fun MonthDayPicker(
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewMonthDayPicker() {
+fun WeekDayPickerPreview() {
     var selectedDate by remember { mutableStateOf(LocalDate.now()) }
     Fit_SentinelTheme {
-        MonthDayPicker(
+        WeekDayPicker(
             selectedDate = selectedDate,
             onDateSelected = { date -> selectedDate = date }
         )

@@ -17,9 +17,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.fit_sentinel.ui.common.MonitorRow
 import com.example.fit_sentinel.ui.common.MonthNavigationHeader
-import com.example.fit_sentinel.ui.screens.main.home.components.MonthDayPicker
 import com.example.fit_sentinel.ui.screens.main.home.components.StepProgressDisplay
 import com.example.fit_sentinel.ui.screens.main.home.components.TargetStepsCard
+import com.example.fit_sentinel.ui.screens.main.home.components.WeekDayPicker
 import com.example.fit_sentinel.ui.theme.Fit_SentinelTheme
 import java.time.LocalDate
 
@@ -56,7 +56,7 @@ fun HomeLayout(
             modifier = Modifier.padding(start = 16.dp)
         )
 
-        MonthDayPicker(
+        WeekDayPicker(
             selectedDate = selectedDate,
             onDateSelected = onDateSelected
         )
