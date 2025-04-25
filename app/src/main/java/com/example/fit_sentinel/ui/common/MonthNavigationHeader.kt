@@ -1,4 +1,4 @@
-package com.example.fit_sentinel.ui.screens.main.home.components
+package com.example.fit_sentinel.ui.common
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row

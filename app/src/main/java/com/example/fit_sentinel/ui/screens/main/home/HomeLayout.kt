@@ -16,8 +16,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.fit_sentinel.ui.common.MonitorRow
+import com.example.fit_sentinel.ui.common.MonthNavigationHeader
 import com.example.fit_sentinel.ui.screens.main.home.components.MonthDayPicker
-import com.example.fit_sentinel.ui.screens.main.home.components.MonthNavigationHeader
 import com.example.fit_sentinel.ui.screens.main.home.components.StepProgressDisplay
 import com.example.fit_sentinel.ui.screens.main.home.components.TargetStepsCard
 import com.example.fit_sentinel.ui.theme.Fit_SentinelTheme
