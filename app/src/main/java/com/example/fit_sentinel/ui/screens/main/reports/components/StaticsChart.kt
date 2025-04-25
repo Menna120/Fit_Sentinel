@@ -49,54 +49,54 @@ fun StaticsChart(
             )
         }
     }
-
-    ColumnChart(
-        modifier = modifier
-            .aspectRatio(2f)
-            .fillMaxWidth(),
-        data = chartData,
-        barProperties = BarProperties(
-            cornerRadius = Bars.Data.Radius.Rectangle(topRight = 6.dp, topLeft = 6.dp),
-            spacing = spacing
-        ),
-        labelProperties = LabelProperties(
-            enabled = true,
-            builder = { modifier, label, visibility, value ->
-                Text(
-                    text = label,
-                    modifier = Modifier.padding(
-                        start = if (value == 0) labelsOffset else 0.dp,
-                        end = if (value == dailyStepData.size - 1) labelsOffset else 0.dp
-                    ),
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            }
-        ),
-        indicatorProperties = HorizontalIndicatorProperties(
-            enabled = true,
-            textStyle = MaterialTheme.typography.bodyMedium,
-            contentBuilder = { it.format(0) },
-            indicators = listOf(dailyStepData.maxOf { it.steps })
-        ),
-        gridProperties = GridProperties(enabled = false),
-        dividerProperties = DividerProperties(
-            xAxisProperties = LineProperties(
-                color = SolidColor(Black.copy(alpha = .6f)),
-                thickness = (1.5).dp
+    if (chartData.isNotEmpty())
+        ColumnChart(
+            modifier = modifier
+                .aspectRatio(2f)
+                .fillMaxWidth(),
+            data = chartData,
+            barProperties = BarProperties(
+                cornerRadius = Bars.Data.Radius.Rectangle(topRight = 6.dp, topLeft = 6.dp),
+                spacing = spacing
             ),
-            yAxisProperties = LineProperties(
-                color = SolidColor(Black.copy(alpha = .6f)),
-                thickness = (1.5).dp
-            )
-        ),
-        labelHelperProperties = LabelHelperProperties(enabled = false),
-        popupProperties = PopupProperties(
-            textStyle = MaterialTheme.typography.labelSmall,
-            containerColor = MaterialTheme.colorScheme.background,
-            contentBuilder = { it.format(0) }
-        ),
-        barAlphaDecreaseOnPopup = 0f
-    )
+            labelProperties = LabelProperties(
+                enabled = true,
+                builder = { modifier, label, visibility, value ->
+                    Text(
+                        text = label,
+                        modifier = Modifier.padding(
+                            start = if (value == 0) labelsOffset else 0.dp,
+                            end = if (value == dailyStepData.size - 1) labelsOffset else 0.dp
+                        ),
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+            ),
+            indicatorProperties = HorizontalIndicatorProperties(
+                enabled = true,
+                textStyle = MaterialTheme.typography.bodyMedium,
+                contentBuilder = { it.format(0) },
+                indicators = listOf(dailyStepData.maxOf { it.steps })
+            ),
+            gridProperties = GridProperties(enabled = false),
+            dividerProperties = DividerProperties(
+                xAxisProperties = LineProperties(
+                    color = SolidColor(Black.copy(alpha = .6f)),
+                    thickness = (1.5).dp
+                ),
+                yAxisProperties = LineProperties(
+                    color = SolidColor(Black.copy(alpha = .6f)),
+                    thickness = (1.5).dp
+                )
+            ),
+            labelHelperProperties = LabelHelperProperties(enabled = false),
+            popupProperties = PopupProperties(
+                textStyle = MaterialTheme.typography.labelSmall,
+                containerColor = MaterialTheme.colorScheme.background,
+                contentBuilder = { it.format(0) }
+            ),
+            barAlphaDecreaseOnPopup = 0f
+        )
 }
 
 @Preview(showBackground = true)
