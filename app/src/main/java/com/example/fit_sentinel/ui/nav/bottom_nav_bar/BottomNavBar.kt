@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -20,6 +21,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.fit_sentinel.ui.common.MainCard
 import com.example.fit_sentinel.ui.nav.nav_graph.main_nav.HomeRoute
 import com.example.fit_sentinel.ui.theme.Fit_SentinelTheme
 
@@ -29,52 +31,57 @@ fun BottomNavBar(
     onItemClick: (item: BottomNavItem<out Any>) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    NavigationBar(
-        modifier = modifier
-            .clip(CircleShape)
-            .heightIn(max = 60.dp),
-        containerColor = MaterialTheme.colorScheme.primary
+    MainCard(
+        modifier = modifier,
+        shape = CircleShape,
+        elevation = CardDefaults.cardElevation(4.dp)
     ) {
-        navItems.forEach { item ->
-            val selected = isSelected(item)
+        NavigationBar(
+            modifier = Modifier.heightIn(max = 60.dp),
+            containerColor = MaterialTheme.colorScheme.primary
+        ) {
+            navItems.forEach { item ->
+                val selected = isSelected(item)
 
-            val indicatorBackgroundColor by animateColorAsState(
-                targetValue = if (selected) MaterialTheme.colorScheme.background else Color.Transparent,
-                animationSpec = tween(durationMillis = 300),
-                label = "indicator background color animation"
-            )
-
-            val iconColor by animateColorAsState(
-                targetValue = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.background,
-                animationSpec = tween(durationMillis = 300), label = "icon color animation"
-            )
-
-            NavigationBarItem(
-                selected = isSelected(item),
-                onClick = { onItemClick(item) },
-                icon = {
-                    Icon(
-                        imageVector = ImageVector.vectorResource(id = item.icon),
-                        contentDescription = "",
-                        modifier = Modifier
-                            .then(
-                                if (selected) Modifier
-                                    .clip(CircleShape)
-                                    .background(indicatorBackgroundColor)
-                                    .padding(8.dp)
-                                else Modifier
-                            ),
-                        tint = iconColor
-                    )
-                },
-                colors = NavigationBarItemDefaults.colors(
-                    indicatorColor = Color.Transparent,
-                    selectedIconColor = MaterialTheme.colorScheme.primary,
-                    unselectedIconColor = MaterialTheme.colorScheme.background,
+                val indicatorBackgroundColor by animateColorAsState(
+                    targetValue = if (selected) MaterialTheme.colorScheme.background else Color.Transparent,
+                    animationSpec = tween(durationMillis = 300),
+                    label = "indicator background color animation"
                 )
-            )
+
+                val iconColor by animateColorAsState(
+                    targetValue = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.background,
+                    animationSpec = tween(durationMillis = 300), label = "icon color animation"
+                )
+
+                NavigationBarItem(
+                    selected = isSelected(item),
+                    onClick = { onItemClick(item) },
+                    icon = {
+                        Icon(
+                            imageVector = ImageVector.vectorResource(id = item.icon),
+                            contentDescription = "",
+                            modifier = Modifier
+                                .then(
+                                    if (selected) Modifier
+                                        .clip(CircleShape)
+                                        .background(indicatorBackgroundColor)
+                                        .padding(8.dp)
+                                    else Modifier
+                                ),
+                            tint = iconColor
+                        )
+                    },
+                    colors = NavigationBarItemDefaults.colors(
+                        indicatorColor = Color.Transparent,
+                        selectedIconColor = MaterialTheme.colorScheme.primary,
+                        unselectedIconColor = MaterialTheme.colorScheme.background,
+                    )
+                )
+            }
         }
     }
+
 }
 
 @Preview

@@ -5,13 +5,14 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import com.example.fit_sentinel.ui.screens.main.home.HomeScreen
+import com.example.fit_sentinel.ui.screens.main.reports.ReportsScreen
 
 fun NavGraphBuilder.mainNavigator(navController: NavController) {
     navigation<Main>(startDestination = HomeRoute) {
 
         composable<HomeRoute> { HomeScreen() }
 
-        composable<ReportsRoute> { }
+        composable<ReportsRoute> { ReportsScreen() }
 
         composable<HealthRoute> { }
 
