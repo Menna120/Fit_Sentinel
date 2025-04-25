@@ -57,6 +57,9 @@ dependencies {
     //splash Screen
     implementation(libs.androidx.core.splashscreen)
 
+    // Charts
+    implementation(libs.compose.charts)
+
     // navigation
     implementation(libs.androidx.navigation.compose)
     implementation(libs.kotlinx.serialization.json)
