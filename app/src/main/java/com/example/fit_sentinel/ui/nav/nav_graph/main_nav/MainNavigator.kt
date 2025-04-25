@@ -9,6 +9,7 @@ import com.example.fit_sentinel.ui.nav.nav_graph.sharedViewModel
 import com.example.fit_sentinel.ui.screens.main.health.HealthScreen
 import com.example.fit_sentinel.ui.screens.main.health.HealthViewModel
 import com.example.fit_sentinel.ui.screens.main.home.HomeScreen
+import com.example.fit_sentinel.ui.screens.main.reports.ReportsScreen
 
 fun NavGraphBuilder.mainNavigation(
     navController: NavController,
@@ -17,7 +18,7 @@ fun NavGraphBuilder.mainNavigation(
 
         composable<HomeRoute> { HomeScreen() }
 
-        composable<ReportsRoute> { }
+        composable<ReportsRoute> { ReportsScreen() }
 
         composable<HealthRoute> {
             val viewModel = it.sharedViewModel<HealthViewModel>(
