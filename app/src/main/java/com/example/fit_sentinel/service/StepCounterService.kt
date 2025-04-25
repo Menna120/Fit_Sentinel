@@ -24,6 +24,7 @@ class StepCounterService : LifecycleService() { // Use LifecycleService
 
     @Inject
     lateinit var stepSensorManager: StepSensorManager // Inject sensor manager
+
     @Inject
     lateinit var repository: StepRepository // Inject repo if needed for saving
 
@@ -94,7 +95,7 @@ class StepCounterService : LifecycleService() { // Use LifecycleService
                 "Step Counter",
                 NotificationManager.IMPORTANCE_LOW // Low importance for less intrusiveness
             )
-            val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            val manager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
             manager.createNotificationChannel(channel)
         }
     }
@@ -118,7 +119,7 @@ class StepCounterService : LifecycleService() { // Use LifecycleService
 
     private fun updateNotification(steps: Int) {
         val notification = createNotification(steps)
-        val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val manager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         manager.notify(NOTIFICATION_ID, notification)
     }
 
