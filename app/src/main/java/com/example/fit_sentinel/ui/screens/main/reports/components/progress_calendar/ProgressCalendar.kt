@@ -41,16 +41,17 @@ fun ProgressCalendar(
 
             CalendarHeader()
 
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(7),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 8.dp)
-            ) {
-                items(dailyProgress) { dayProgress ->
-                    DayView(dayProgress = dayProgress)
+            if (dailyProgress.isNotEmpty())
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(7),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp)
+                ) {
+                    items(dailyProgress) { dayProgress ->
+                        DayView(dayProgress = dayProgress)
+                    }
                 }
-            }
 
         }
     }
