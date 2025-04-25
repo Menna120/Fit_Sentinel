@@ -38,8 +38,10 @@ fun DayCard(
     unselectedTextColor: Color,
     onDayClick: (LocalDate) -> Unit
 ) {
+    val today = LocalDate.now()
     val cardColor = if (isSelected) selectedCardColor else unselectedCardColor
-    val textColor = if (isSelected) selectedTextColor else unselectedTextColor
+    val textColor =
+        if (isSelected) selectedTextColor else if (date == today) selectedCardColor.copy(alpha = .5f) else unselectedTextColor
 
     Card(
         modifier = Modifier
@@ -47,7 +49,10 @@ fun DayCard(
             .aspectRatio(.8f)
             .clickable { onDayClick(date) },
         shape = RoundedCornerShape(8.dp),
-        border = if (!isSelected) BorderStroke(1.dp, unselectedTextColor) else null,
+        border = if (!isSelected) BorderStroke(
+            1.dp,
+            if (date == today) selectedCardColor else unselectedTextColor
+        ) else null,
         colors = CardDefaults.cardColors(containerColor = cardColor)
     ) {
         Column(
