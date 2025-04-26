@@ -6,7 +6,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import com.example.fit_sentinel.ui.screens.main.home.HomeScreen
 
-fun NavGraphBuilder.mainNavigator(navController: NavController) {
+fun NavGraphBuilder.mainNavigation(navController: NavController) {
     navigation<Main>(startDestination = HomeRoute) {
 
         composable<HomeRoute> { HomeScreen() }

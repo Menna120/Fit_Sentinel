@@ -15,9 +15,11 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.get
 import com.example.fit_sentinel.ui.nav.bottom_nav_bar.BottomNavBar
-import com.example.fit_sentinel.ui.nav.nav_graph.form_nav.formNavigator
 import com.example.fit_sentinel.ui.nav.nav_graph.main_nav.Main
-import com.example.fit_sentinel.ui.nav.nav_graph.main_nav.mainNavigator
+import com.example.fit_sentinel.ui.nav.nav_graph.main_nav.mainNavigation
+import com.example.fit_sentinel.ui.nav.nav_graph.on_boarding_nav.Form
+import com.example.fit_sentinel.ui.nav.nav_graph.on_boarding_nav.onBoardingNavigation
+import com.example.fit_sentinel.ui.screens.on_boarding.OnboardingProgressBar
 
 @Composable
 fun NavGraph(
@@ -28,9 +30,15 @@ fun NavGraph(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
     val showBottomBar = currentDestination?.parent?.equals(navController.graph[Main]) == true
+    val showTopBar = currentDestination?.parent?.equals(navController.graph[Form]) == true
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
+        topBar = {
+            if (showTopBar) {
+                OnboardingProgressBar { navController.popBackStack() }
+            }
+        },
         bottomBar = {
             if (showBottomBar) {
                 BottomNavBar(
@@ -52,8 +60,9 @@ fun NavGraph(
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            mainNavigator(navController)
-            formNavigator(navController)
+            mainNavigation(navController)
+
+            onBoardingNavigation(navController)
         }
     }
 }
