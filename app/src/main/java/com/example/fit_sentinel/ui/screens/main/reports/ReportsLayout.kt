@@ -39,7 +39,7 @@ fun ReportsLayout(
         modifier = modifier
             .fillMaxSize()
             .padding(16.dp),
-        verticalArrangement = Arrangement.SpaceAround
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         MonthNavigationHeader(currentDate, onPreviousMonth, onNextMonth)
 
