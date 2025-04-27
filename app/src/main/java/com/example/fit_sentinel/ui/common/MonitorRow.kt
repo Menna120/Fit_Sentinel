@@ -23,7 +23,7 @@ fun MonitorRow(
     modifier: Modifier = Modifier
 ) {
     val weight = 1f
-    val ratio = .9f
+    val ratio = 1f
 
     Row(
         modifier = modifier.fillMaxWidth(),
@@ -31,7 +31,7 @@ fun MonitorRow(
         verticalAlignment = Alignment.CenterVertically
     ) {
         InfoCard(
-            R.drawable.time, time, "Time", Modifier
+            R.drawable.time, time, "", Modifier
                 .weight(weight)
                 .aspectRatio(ratio)
         )

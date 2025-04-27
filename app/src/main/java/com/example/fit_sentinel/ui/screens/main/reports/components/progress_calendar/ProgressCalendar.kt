@@ -1,5 +1,6 @@
 package com.example.fit_sentinel.ui.screens.main.reports.components.progress_calendar
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -27,12 +28,12 @@ fun ProgressCalendar(
     MainCard(modifier = modifier) {
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 24.dp),
+                .fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             Text(
                 text = "Your progress",
-                modifier = Modifier.padding(16.dp),
+                modifier = Modifier.padding(8.dp),
                 fontSize = 16.sp,
                 style = MaterialTheme.typography.titleMedium,
             )

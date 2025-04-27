@@ -52,6 +52,7 @@ fun StaticsChart(
     if (chartData.isNotEmpty())
         ColumnChart(
             modifier = modifier
+                .fillMaxWidth()
                 .aspectRatio(2f)
                 .fillMaxWidth(),
             data = chartData,
