@@ -3,6 +3,7 @@ package com.example.fit_sentinel.ui.screens.main.home
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -67,7 +68,9 @@ fun HomeLayout(
             steps,
             targetSteps,
             onButtonClick,
-            Modifier.align(Alignment.CenterHorizontally)
+            Modifier
+                .align(Alignment.CenterHorizontally)
+                .fillMaxWidth(.7f)
         )
 
         MonitorRow(time, calories, distance)

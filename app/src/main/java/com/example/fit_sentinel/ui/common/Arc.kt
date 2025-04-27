@@ -4,9 +4,9 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -24,7 +24,6 @@ fun Arc(
     currentValue: Int,
     targetValue: Int,
     modifier: Modifier = Modifier,
-    size: Dp = 250.dp,
     arcWidth: Dp = 24.dp,
     startAngle: Float = 135f,
     totalAngle: Float = 270f,
@@ -33,7 +32,7 @@ fun Arc(
     content: @Composable (ColumnScope.() -> Unit)
 ) {
     Box(
-        modifier = modifier.size(size),
+        modifier = modifier.aspectRatio(1f),
         contentAlignment = Alignment.Center
     ) {
         Canvas(
