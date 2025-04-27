@@ -3,13 +3,13 @@
     android:height="40dp"
     android:viewportWidth="40"
     android:viewportHeight="40">
-  <path
-      android:pathData="M33.6,20C33.6,27.52 27.52,33.6 20,33.6C12.48,33.6 6.4,27.52 6.4,20C6.4,12.48 12.48,6.4 20,6.4C27.52,6.4 33.6,12.48 33.6,20ZM8,20C8,26.64 13.36,32 20,32C26.64,32 32,26.64 32,20C32,13.36 26.64,8 20,8C13.36,8 8,13.36 8,20Z"
-      android:fillColor="#000000"/>
-  <path
-      android:pathData="M21.36,13.36L14.72,20L21.36,26.64L20.24,27.76L12.48,20L20.24,12.24L21.36,13.36Z"
-      android:fillColor="#000000"/>
-  <path
-      android:pathData="M13.6,20.8V19.2H27.2V20.8H13.6Z"
-      android:fillColor="#000000"/>
+    <path
+        android:fillColor="#000000"
+        android:pathData="M33.6,20C33.6,27.52 27.52,33.6 20,33.6C12.48,33.6 6.4,27.52 6.4,20C6.4,12.48 12.48,6.4 20,6.4C27.52,6.4 33.6,12.48 33.6,20ZM8,20C8,26.64 13.36,32 20,32C26.64,32 32,26.64 32,20C32,13.36 26.64,8 20,8C13.36,8 8,13.36 8,20Z" />
+    <path
+        android:fillColor="#000000"
+        android:pathData="M21.36,13.36L14.72,20L21.36,26.64L20.24,27.76L12.48,20L20.24,12.24L21.36,13.36Z" />
+    <path
+        android:fillColor="#000000"
+        android:pathData="M13.6,20.8V19.2H27.2V20.8H13.6Z" />
 </vector>

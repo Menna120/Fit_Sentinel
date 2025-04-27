@@ -8,10 +8,10 @@ data class ScaleSegment(
 )
 
 val bmiSegments = listOf(
-    ScaleSegment(color = Color(0xFF91E1D7), maxThreshold = 18.5f), // Light Blue/Teal
-    ScaleSegment(color = Color(0xFF4C6C92), maxThreshold = 25f), // Green
-    ScaleSegment(color = Color(0xFF61FD67), maxThreshold = 30f), // Yellow
-    ScaleSegment(color = Color(0xFFE7F266), maxThreshold = 35f), // Orange
-    ScaleSegment(color = Color(0xFFFCA115), maxThreshold = 40f), // Red
-    ScaleSegment(color = Color(0xFFFE0011), maxThreshold = 45f) // Purple
+    ScaleSegment(color = Color(0xFF91E1D7), maxThreshold = 18.5f),
+    ScaleSegment(color = Color(0xFF4C6C92), maxThreshold = 25f),
+    ScaleSegment(color = Color(0xFF61FD67), maxThreshold = 30f),
+    ScaleSegment(color = Color(0xFFE7F266), maxThreshold = 35f),
+    ScaleSegment(color = Color(0xFFFCA115), maxThreshold = 40f),
+    ScaleSegment(color = Color(0xFFFE0011), maxThreshold = 45f)
 )
