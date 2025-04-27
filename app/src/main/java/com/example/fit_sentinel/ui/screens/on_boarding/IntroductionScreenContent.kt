@@ -18,8 +18,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.fit_sentinel.ui.nav.nav_graph.on_boarding_nav.IllnessRoute
-import com.example.fit_sentinel.ui.nav.nav_graph.on_boarding_nav.NameRoute
+import com.example.fit_sentinel.ui.nav.nav_graph.onboarding_nav.IllnessRoute
+import com.example.fit_sentinel.ui.nav.nav_graph.onboarding_nav.NameRoute
 
 // Example: Screen content for the Introduction step
 @Composable

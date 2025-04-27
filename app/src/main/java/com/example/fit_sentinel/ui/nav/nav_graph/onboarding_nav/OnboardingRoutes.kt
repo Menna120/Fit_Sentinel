@@ -1,9 +1,9 @@
-package com.example.fit_sentinel.ui.nav.nav_graph.on_boarding_nav
+package com.example.fit_sentinel.ui.nav.nav_graph.onboarding_nav
 
 import kotlinx.serialization.Serializable
 
 @Serializable
-object OnBoarding
+object Onboarding
 
 @Serializable
 object IntroductionRoute
