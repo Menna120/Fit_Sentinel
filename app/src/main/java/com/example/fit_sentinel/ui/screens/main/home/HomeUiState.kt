@@ -12,6 +12,6 @@ data class HomeUiState(
     val isRecording: Boolean = false,
     val errorMessage: String? = null,
     val time: String = "0h 0m",
-    val calories: String = "0 kcal",
-    val distance: String = "0.0 km"
+    val calories: String = "0",
+    val distance: String = "0.0"
 )

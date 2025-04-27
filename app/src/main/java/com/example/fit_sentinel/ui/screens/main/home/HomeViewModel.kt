@@ -38,7 +38,7 @@ class HomeViewModel @Inject constructor(
     init {
         observeTodaySteps()
         observeStepHistory()
-        startStepTracking()
+//        startStepTracking()
     }
 
     private fun observeTodaySteps() {
@@ -100,8 +100,8 @@ class HomeViewModel @Inject constructor(
             val metrics = calculateStepMetricsUseCase(steps)
             _uiState.update {
                 it.copy(
-                    distance = "${metrics.distanceKm.format(1)} Km",
-                    calories = "${metrics.caloriesBurned.roundToInt()} kcal",
+                    distance = metrics.distanceKm.format(1),
+                    calories = "${metrics.caloriesBurned.roundToInt()}",
                     time = formatMinutesToHoursAndMinutes(metrics.estimatedTimeMinutes)
                 )
             }
