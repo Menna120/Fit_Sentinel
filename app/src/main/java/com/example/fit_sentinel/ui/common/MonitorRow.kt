@@ -2,10 +2,10 @@ package com.example.fit_sentinel.ui.common
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,28 +22,19 @@ fun MonitorRow(
     distance: String,
     modifier: Modifier = Modifier
 ) {
-    val weight = 1f
-    val ratio = .9f
-
     Row(
         modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         InfoCard(
-            R.drawable.time, time, "Time", Modifier
-                .weight(weight)
-                .aspectRatio(ratio)
+            R.drawable.time, time, "Time", Modifier.size(113.dp, 115.dp)
         )
         InfoCard(
-            R.drawable.calories, calories, "Kcal", Modifier
-                .weight(weight)
-                .aspectRatio(ratio)
+            R.drawable.calories, calories, "Kcal", Modifier.size(113.dp, 115.dp)
         )
         InfoCard(
-            R.drawable.walk, distance, "Km", Modifier
-                .weight(weight)
-                .aspectRatio(ratio)
+            R.drawable.walk, distance, "Km", Modifier.size(113.dp, 115.dp)
         )
     }
 }
