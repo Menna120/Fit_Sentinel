@@ -1,4 +1,4 @@
-package com.example.fit_sentinel.ui.screens.main.health
+package com.example.fit_sentinel.ui.screens.main.health.components.bmi_scalar
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

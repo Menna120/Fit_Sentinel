@@ -6,8 +6,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.example.fit_sentinel.ui.nav.nav_graph.main_nav.HealthRoute
 import com.example.fit_sentinel.ui.nav.nav_graph.sharedViewModel
+import com.example.fit_sentinel.ui.screens.main.health.ExerciseDetailsLayout
 import com.example.fit_sentinel.ui.screens.main.health.HealthViewModel
-import com.example.fit_sentinel.ui.screens.main.health.components.layouts.ExerciseDetailsLayout
 
 fun NavGraphBuilder.exerciseNavigation(
     navController: NavController,

@@ -1,4 +1,4 @@
-package com.example.fit_sentinel.ui.screens.main.health
+package com.example.fit_sentinel.ui.screens.main.health.components.bmi_scalar
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -30,12 +30,10 @@ import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.fit_sentinel.ui.common.MainCard
 import com.example.fit_sentinel.ui.theme.Fit_SentinelTheme
 
@@ -43,9 +41,9 @@ import com.example.fit_sentinel.ui.theme.Fit_SentinelTheme
 fun ScaleIndicatorBar(
     value: Float,
     categoryLabel: String,
-    minValue: Float,
-    maxValue: Float,
     modifier: Modifier = Modifier,
+    minValue: Float = 15f,
+    maxValue: Float = 45f,
 ) {
     var barWidthPx by remember { mutableIntStateOf(0) }
     var indicatorLabelWidthPx by remember { mutableIntStateOf(0) }
@@ -94,9 +92,8 @@ fun ScaleIndicatorBar(
 
                 Text(
                     text = categoryLabel,
-                    textAlign = TextAlign.Center,
                     color = if (indicatorColor.luminance() > 0.5f) Color.Black else Color.White,
-                    fontSize = 12.sp,
+                    style = MaterialTheme.typography.labelSmall,
                     modifier = Modifier
                         .onGloballyPositioned { coordinates ->
                             indicatorLabelWidthPx = coordinates.size.width
@@ -115,6 +112,7 @@ fun ScaleIndicatorBar(
                                 pointerSize = Size(width = 16.dp.toPx(), height = 8.dp.toPx()),
                             )
                         )
+                        .height(28.dp)
                         .padding(horizontal = 8.dp, vertical = 4.dp)
                 )
             }
@@ -122,7 +120,7 @@ fun ScaleIndicatorBar(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(24.dp)
+                    .height(20.dp)
                     .padding(horizontal = 16.dp)
                     .clip(RoundedCornerShape(4.dp))
                     .onGloballyPositioned { coordinates ->
@@ -168,8 +166,6 @@ fun PreviewScaleIndicatorBarProportionalSegments() {
         ScaleIndicatorBar(
             value = 24.22f,
             categoryLabel = "Healthy weight",
-            minValue = 15f,
-            maxValue = 45f,
             modifier = Modifier.fillMaxWidth()
         )
     }
