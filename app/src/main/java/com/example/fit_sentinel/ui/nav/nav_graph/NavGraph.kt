@@ -18,6 +18,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.get
 import com.example.fit_sentinel.ui.nav.bottom_nav_bar.BottomNavBar
+import com.example.fit_sentinel.ui.nav.nav_graph.exercise_nav.exerciseNavigation
 import com.example.fit_sentinel.ui.nav.nav_graph.main_nav.Main
 import com.example.fit_sentinel.ui.nav.nav_graph.main_nav.mainNavigation
 import com.example.fit_sentinel.ui.nav.nav_graph.onboarding_nav.Onboarding
@@ -34,18 +35,17 @@ fun NavGraph(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
-    val showBottomBar by remember {
+    val showBottomBar by remember(currentDestination?.parent) {
         derivedStateOf {
             currentDestination?.parent?.equals(
                 navController.graph[Main]
             ) == true
         }
     }
-
-    val showTopBar by remember {
+    val showTopBar by remember(startDestination == Onboarding) {
         derivedStateOf {
             currentDestination?.hierarchy?.any {
-                it.route == Main::class.qualifiedName
+                it.route == Onboarding::class.qualifiedName
             } == true
         }
     }
@@ -101,6 +101,8 @@ fun NavGraph(
             mainNavigation(navController)
 
             onBoardingNavigation(navController)
+
+            exerciseNavigation(navController)
         }
     }
 }
