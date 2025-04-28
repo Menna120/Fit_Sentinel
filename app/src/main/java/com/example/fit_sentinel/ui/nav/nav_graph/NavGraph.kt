@@ -98,7 +98,7 @@ fun NavGraph(
                 .padding(innerPadding)
         ) {
 
-        mainNavigation(navController)
+            mainNavigation(navController)
 
             onBoardingNavigation(navController)
         }

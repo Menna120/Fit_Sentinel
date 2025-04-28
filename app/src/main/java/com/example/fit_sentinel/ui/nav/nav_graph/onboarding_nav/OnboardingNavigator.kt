@@ -18,27 +18,48 @@ fun NavGraphBuilder.onBoardingNavigation(
 
         navigation<Form>(startDestination = NameRoute) {
             composable<NameRoute> {
-                it.sharedViewModel(navController = navController, graphRoute = Onboarding)
+                it.sharedViewModel<OnboardingViewModel>(
+                    navController = navController,
+                    graphRoute = Onboarding
+                )
             }
             composable<GenderRoute> {
             }
             composable<IllnessRoute> {
-                it.sharedViewModel(navController = navController, graphRoute = Onboarding)
+                it.sharedViewModel<OnboardingViewModel>(
+                    navController = navController,
+                    graphRoute = Onboarding
+                )
             }
             composable<ChronicDiseasesRoute> {
-                it.sharedViewModel(navController = navController, graphRoute = Onboarding)
+                it.sharedViewModel<OnboardingViewModel>(
+                    navController = navController,
+                    graphRoute = Onboarding
+                )
             }
             composable<WeightRoute> {
-                it.sharedViewModel(navController = navController, graphRoute = Onboarding)
+                it.sharedViewModel<OnboardingViewModel>(
+                    navController = navController,
+                    graphRoute = Onboarding
+                )
             }
             composable<HeightRoute> {
-                it.sharedViewModel(navController = navController, graphRoute = Onboarding)
+                it.sharedViewModel<OnboardingViewModel>(
+                    navController = navController,
+                    graphRoute = Onboarding
+                )
             }
             composable<AgeRoute> {
-                it.sharedViewModel(navController = navController, graphRoute = Onboarding)
+                it.sharedViewModel<OnboardingViewModel>(
+                    navController = navController,
+                    graphRoute = Onboarding
+                )
             }
             composable<TargetWeightRoute> {
-                it.sharedViewModel(navController = navController, graphRoute = Onboarding)
+                it.sharedViewModel<OnboardingViewModel>(
+                    navController = navController,
+                    graphRoute = Onboarding
+                )
             }
         }
     }
