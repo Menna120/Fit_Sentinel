@@ -19,6 +19,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.fit_sentinel.R
 import com.example.fit_sentinel.ui.common.MainCard
 import com.example.fit_sentinel.ui.theme.Fit_SentinelTheme
@@ -41,13 +42,13 @@ fun InfoCard(
             Icon(
                 painter = painterResource(id = icon),
                 contentDescription = "$value $unit",
-                modifier = Modifier.size(32.dp),
+                modifier = Modifier.size(28.dp),
                 tint = Color.Unspecified
             )
             Text(
                 text = value,
                 textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.headlineMedium
+                style = MaterialTheme.typography.titleMedium.copy(fontSize = 20.sp)
             )
             Text(
                 text = unit,
