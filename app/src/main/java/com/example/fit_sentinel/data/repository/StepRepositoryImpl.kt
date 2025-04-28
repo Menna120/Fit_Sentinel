@@ -4,9 +4,6 @@ import android.util.Log
 import com.example.fit_sentinel.data.local.dao.DailyStepsDao
 import com.example.fit_sentinel.data.local.entity.DailyStepsEntity
 import com.example.fit_sentinel.data.model.SensorMode
-import com.example.fit_sentinel.data.remote.ApiService
-import com.example.fit_sentinel.data.remote.dto.AnalysisRequest
-import com.example.fit_sentinel.data.remote.dto.AnalysisResponse
 import com.example.fit_sentinel.domain.repository.StepRepository
 import com.example.fit_sentinel.domain.repository.StepSensorManager
 import com.example.fit_sentinel.domain.usecase.CalculateStepMetricsUseCase
@@ -21,7 +18,6 @@ import javax.inject.Inject
 
 class StepRepositoryImpl @Inject constructor(
     private val dailyStepsDao: DailyStepsDao,
-    private val apiService: ApiService,
     private val stepSensorManager: StepSensorManager,
     private val applicationScope: CoroutineScope,
     private val calculateStepMetricsUseCase: CalculateStepMetricsUseCase
@@ -83,24 +79,6 @@ class StepRepositoryImpl @Inject constructor(
 
     override fun getStepHistory(): Flow<List<DailyStepsEntity>> {
         return dailyStepsDao.getAllDailySteps()
-    }
-
-    override suspend fun getStepAnalysis(request: AnalysisRequest): Result<AnalysisResponse> {
-        return withContext(Dispatchers.IO) {
-            try {
-                val response = apiService.analyzeSteps(request)
-                if (response.isSuccessful && response.body() != null) {
-                    Result.success(response.body()!!)
-                } else {
-                    val errorMsg = response.errorBody()?.string() ?: "API Error: ${response.code()}"
-                    Log.e("StepRepository", "API Analysis Error: $errorMsg")
-                    Result.failure(Exception(errorMsg))
-                }
-            } catch (e: Exception) {
-                Log.e("StepRepository", "Network/Analysis Exception", e)
-                Result.failure(e)
-            }
-        }
     }
 
     override fun startStepTracking() {
