@@ -18,8 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.fit_sentinel.ui.nav.nav_graph.onboarding_nav.IllnessRoute
-import com.example.fit_sentinel.ui.nav.nav_graph.onboarding_nav.NameRoute
+import com.example.fit_sentinel.ui.nav.nav_graph.onboarding_nav.OnboardingScreen
 
 // Example: Screen content for the Introduction step
 @Composable
@@ -38,7 +37,7 @@ fun IntroductionScreenContent(
         Spacer(modifier = Modifier.height(32.dp))
         Button(onClick = {
             // Navigate to the first screen of the form graph
-            navController.navigate(NameRoute)
+            navController.navigate(OnboardingScreen.Name)
         }) {
             Text("Start")
         }
@@ -81,7 +80,7 @@ fun GenderScreenContent(
                 // In your image, it's 2/9, so selecting gender IS a step.
                 viewModel.nextStep()
                 // Navigate to the next screen in the form flow
-                navController.navigate(IllnessRoute)
+                navController.navigate(OnboardingScreen.Illness)
             },
             modifier = Modifier.fillMaxWidth()
         ) {

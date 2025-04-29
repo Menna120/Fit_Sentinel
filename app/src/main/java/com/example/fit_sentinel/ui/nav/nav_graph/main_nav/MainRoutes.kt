@@ -3,16 +3,19 @@ package com.example.fit_sentinel.ui.nav.nav_graph.main_nav
 import kotlinx.serialization.Serializable
 
 @Serializable
-object Main
+sealed class MainScreen {
+    @Serializable
+    object Home : MainScreen()
 
-@Serializable
-object HomeRoute
+    @Serializable
+    object Reports : MainScreen()
 
-@Serializable
-object ReportsRoute
+    @Serializable
+    object Health : MainScreen()
 
-@Serializable
-object HealthRoute
+    @Serializable
+    object Settings : MainScreen()
 
-@Serializable
-object SettingsRoute
+    @Serializable
+    data class ExerciseData(val index: Int)
+}

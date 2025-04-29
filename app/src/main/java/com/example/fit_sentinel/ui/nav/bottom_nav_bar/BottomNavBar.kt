@@ -22,7 +22,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.fit_sentinel.ui.common.MainCard
-import com.example.fit_sentinel.ui.nav.nav_graph.main_nav.HomeRoute
+import com.example.fit_sentinel.ui.nav.nav_graph.main_nav.MainScreen
 import com.example.fit_sentinel.ui.theme.Fit_SentinelTheme
 
 @Composable
@@ -88,6 +88,6 @@ fun BottomNavBar(
 @Composable
 private fun BottomNavBarPreview() {
     Fit_SentinelTheme {
-        BottomNavBar({ it.destination == HomeRoute }, {})
+        BottomNavBar({ it.destination == MainScreen.Home }, {})
     }
 }

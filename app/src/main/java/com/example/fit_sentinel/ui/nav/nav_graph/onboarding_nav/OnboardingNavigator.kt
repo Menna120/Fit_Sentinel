@@ -10,57 +10,55 @@ import com.example.fit_sentinel.ui.screens.on_boarding.OnboardingViewModel
 fun NavGraphBuilder.onBoardingNavigation(
     navController: NavController
 ) {
-    navigation<Onboarding>(startDestination = IntroductionRoute) {
 
-        composable<IntroductionRoute> {
+    composable<OnboardingScreen.Introduction> {
 
+    }
+
+    navigation<Form>(startDestination = OnboardingScreen.Name) {
+        composable<OnboardingScreen.Name> {
+            it.sharedViewModel<OnboardingViewModel>(
+                navController = navController,
+                graphRoute = OnboardingScreen
+            )
         }
-
-        navigation<Form>(startDestination = NameRoute) {
-            composable<NameRoute> {
-                it.sharedViewModel<OnboardingViewModel>(
-                    navController = navController,
-                    graphRoute = Onboarding
-                )
-            }
-            composable<GenderRoute> {
-            }
-            composable<IllnessRoute> {
-                it.sharedViewModel<OnboardingViewModel>(
-                    navController = navController,
-                    graphRoute = Onboarding
-                )
-            }
-            composable<ChronicDiseasesRoute> {
-                it.sharedViewModel<OnboardingViewModel>(
-                    navController = navController,
-                    graphRoute = Onboarding
-                )
-            }
-            composable<WeightRoute> {
-                it.sharedViewModel<OnboardingViewModel>(
-                    navController = navController,
-                    graphRoute = Onboarding
-                )
-            }
-            composable<HeightRoute> {
-                it.sharedViewModel<OnboardingViewModel>(
-                    navController = navController,
-                    graphRoute = Onboarding
-                )
-            }
-            composable<AgeRoute> {
-                it.sharedViewModel<OnboardingViewModel>(
-                    navController = navController,
-                    graphRoute = Onboarding
-                )
-            }
-            composable<TargetWeightRoute> {
-                it.sharedViewModel<OnboardingViewModel>(
-                    navController = navController,
-                    graphRoute = Onboarding
-                )
-            }
+        composable<OnboardingScreen.Gender> {
+        }
+        composable<OnboardingScreen.Illness> {
+            it.sharedViewModel<OnboardingViewModel>(
+                navController = navController,
+                graphRoute = OnboardingScreen
+            )
+        }
+        composable<OnboardingScreen.ChronicDiseases> {
+            it.sharedViewModel<OnboardingViewModel>(
+                navController = navController,
+                graphRoute = OnboardingScreen
+            )
+        }
+        composable<OnboardingScreen.Weight> {
+            it.sharedViewModel<OnboardingViewModel>(
+                navController = navController,
+                graphRoute = OnboardingScreen
+            )
+        }
+        composable<OnboardingScreen.Height> {
+            it.sharedViewModel<OnboardingViewModel>(
+                navController = navController,
+                graphRoute = OnboardingScreen
+            )
+        }
+        composable<OnboardingScreen.Age> {
+            it.sharedViewModel<OnboardingViewModel>(
+                navController = navController,
+                graphRoute = OnboardingScreen
+            )
+        }
+        composable<OnboardingScreen.TargetWeight> {
+            it.sharedViewModel<OnboardingViewModel>(
+                navController = navController,
+                graphRoute = OnboardingScreen
+            )
         }
     }
 }
