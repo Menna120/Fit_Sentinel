@@ -24,6 +24,7 @@ fun HealthLayout(
     exercises: List<Exercise>,
     modifier: Modifier = Modifier,
     onExerciseClick: (index: Int) -> Unit,
+    onEditClick: () -> Unit
 ) {
     Column(
         modifier = modifier
@@ -31,7 +32,7 @@ fun HealthLayout(
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
-        ScaleIndicatorBar(value, categoryLabel)
+        ScaleIndicatorBar(value, categoryLabel) { onEditClick() }
 
         Text("Recommendation Trainings", style = MaterialTheme.typography.titleMedium)
 
@@ -84,7 +85,8 @@ private fun HealthLayoutPreview() {
                     description = "Full range of motion, focus on form. Use a weight that challenges you while maintaining good technique."
                 ),
             ),
-            onExerciseClick = {}
+            onExerciseClick = {},
+            onEditClick = {}
         )
     }
 }

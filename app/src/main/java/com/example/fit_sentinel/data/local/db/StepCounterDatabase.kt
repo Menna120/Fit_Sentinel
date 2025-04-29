@@ -8,6 +8,6 @@ import com.example.fit_sentinel.data.local.entity.DailyStepsEntity
 
 @Database(entities = [DailyStepsEntity::class], version = 1, exportSchema = false)
 @TypeConverters(LocalDateConverter::class)
-abstract class AppDatabase : RoomDatabase() {
+abstract class StepCounterDatabase : RoomDatabase() {
     abstract fun dailyStepsDao(): DailyStepsDao
 }

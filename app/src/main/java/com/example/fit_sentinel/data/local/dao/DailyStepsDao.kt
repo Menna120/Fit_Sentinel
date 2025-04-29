@@ -21,4 +21,7 @@ interface DailyStepsDao {
 
     @Query("DELETE FROM daily_steps WHERE date < :dateThreshold")
     suspend fun deleteOldData(dateThreshold: LocalDate)
+
+    @Query("SELECT * FROM daily_steps WHERE date BETWEEN :startDate AND :endDate ORDER BY date DESC")
+    suspend fun getStepsBetween(startDate: LocalDate, endDate: LocalDate): List<DailyStepsEntity>
 }

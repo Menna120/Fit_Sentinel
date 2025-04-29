@@ -14,6 +14,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,12 +30,14 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import com.example.fit_sentinel.R
 import com.example.fit_sentinel.ui.common.MainCard
 import com.example.fit_sentinel.ui.theme.Fit_SentinelTheme
 
@@ -44,6 +48,7 @@ fun ScaleIndicatorBar(
     modifier: Modifier = Modifier,
     minValue: Float = 15f,
     maxValue: Float = 45f,
+    onEditClick: () -> Unit
 ) {
     var barWidthPx by remember { mutableIntStateOf(0) }
     var indicatorLabelWidthPx by remember { mutableIntStateOf(0) }
@@ -69,12 +74,25 @@ fun ScaleIndicatorBar(
                     append(formattedBmi)
                 }
             }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = styledText,
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                )
 
-            Text(
-                text = styledText,
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-            )
+                IconButton(onClick = onEditClick) {
+                    Icon(
+                        painter = painterResource(R.drawable.edit),
+                        contentDescription = ""
+                    )
+                }
+            }
+
 
             HorizontalDivider()
 
@@ -166,7 +184,7 @@ fun PreviewScaleIndicatorBarProportionalSegments() {
         ScaleIndicatorBar(
             value = 24.22f,
             categoryLabel = "Healthy weight",
-            modifier = Modifier.fillMaxWidth()
-        )
+            modifier = Modifier.fillMaxWidth(),
+        ) {}
     }
 }

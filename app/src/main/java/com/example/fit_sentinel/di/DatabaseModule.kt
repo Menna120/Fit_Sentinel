@@ -3,7 +3,8 @@ package com.example.fit_sentinel.di
 import android.content.Context
 import androidx.room.Room
 import com.example.fit_sentinel.data.local.dao.DailyStepsDao
-import com.example.fit_sentinel.data.local.db.AppDatabase
+import com.example.fit_sentinel.data.local.db.StepCounterDatabase
+import com.example.fit_sentinel.data.local.db.UserDataBase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,17 +17,35 @@ import javax.inject.Singleton
 object DatabaseModule {
     @Provides
     @Singleton
-    fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase {
+    fun provideStepCounterDatabase(@ApplicationContext context: Context): StepCounterDatabase {
         return Room.databaseBuilder(
             context,
-            AppDatabase::class.java,
+            StepCounterDatabase::class.java,
             "fit_sentinel_db"
         ).build()
     }
 
     @Provides
     @Singleton
-    fun provideDailyStepsDao(appDatabase: AppDatabase): DailyStepsDao {
-        return appDatabase.dailyStepsDao()
+    fun provideDailyStepsDao(stepCounterDatabase: StepCounterDatabase): DailyStepsDao {
+        return stepCounterDatabase.dailyStepsDao()
     }
+
+    @Provides
+    @Singleton
+    fun provideUserDatabase(@ApplicationContext context: Context): UserDataBase {
+        return Room.databaseBuilder(
+            context,
+            UserDataBase::class.java,
+            "user_db"
+        ).build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideUserDao(userDataBase: UserDataBase): com.example.fit_sentinel.data.local.dao.UserDao {
+        return userDataBase.userDao()
+    }
+
+
 }

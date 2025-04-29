@@ -13,4 +13,7 @@ interface DailyStepsRepository {
         startDate: LocalDate,
         endDate: LocalDate
     ): Flow<List<DailyStepsEntity>>
+
+    suspend fun getStepsBetween(startDate: LocalDate, endDate: LocalDate): List<DailyStepsEntity>
+
 }

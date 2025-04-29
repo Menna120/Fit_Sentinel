@@ -36,4 +36,11 @@ class DailyStepsRepositoryImpl @Inject constructor(
             allSteps.filter { it.date >= startDate && it.date <= endDate }
         }
     }
+
+    override suspend fun getStepsBetween(
+        startDate: LocalDate,
+        endDate: LocalDate
+    ): List<DailyStepsEntity> {
+        return dailyStepsDao.getStepsBetween(startDate, endDate)
+    }
 }

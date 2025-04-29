@@ -1,74 +1,81 @@
 package com.example.fit_sentinel.domain.usecase
 
-import com.example.fit_sentinel.domain.model.Gender
+import com.example.fit_sentinel.data.local.entity.UserDataEntity
+import com.example.fit_sentinel.data.model.Gender
 import com.example.fit_sentinel.domain.model.StepMetrics
-import com.example.fit_sentinel.domain.model.UserProfile
-import com.example.fit_sentinel.domain.repository.UserProfileRepository
+import com.example.fit_sentinel.domain.repository.UserDataRepository
+import kotlinx.coroutines.flow.firstOrNull
 import javax.inject.Inject
 import kotlin.math.roundToInt
 
 class CalculateStepMetricsUseCase @Inject constructor(
-    private val userProfileRepository: UserProfileRepository // Inject repository to get user data
+    private val userDataRepository: UserDataRepository
 ) {
 
-    // Average stride length estimations (in meters)
-    // These are rough averages; actual stride varies greatly.
-    private fun estimateStrideLength(profile: UserProfile?): Double {
-        // More accurate: use (heightCm * factor) or (heightCm * factor + age * factor)
-        // Even better: allow user to input their stride length
-        return when (profile?.gender) {
-            Gender.Male -> 0.78 // meters
-            Gender.Female -> 0.66 // meters
-            else -> 0.70 // Default average
-        }
-        // A common formula is Height (in cm) * 0.414 for men and 0.413 for women, then convert to meters
-        // return (profile?.heightCm ?: 170.0) * (if (profile?.gender == Gender.Male) 0.00414 else 0.00413)
+    /**
+     * Estimates stride length based on user's height and gender.
+     * Uses a common formula: Height (cm) * factor (0.414 for men, 0.413 for women).
+     * Returns stride length in meters.
+     */
+    private fun estimateStrideLength(heightCm: Float, gender: Gender): Double {
+        // Return a reasonable default if height is invalid (e.g., 0 or negative)
+        if (heightCm <= 0) return 0.70 // Default average stride length in meters
+
+        val factor = if (gender == Gender.MALE) 0.414 else 0.413
+        val strideCm = heightCm * factor
+        return strideCm / 100.0 // Convert cm to meters
     }
 
-    // Average walking speed (in km/h)
+    // Average walking speed (in km/h) - Used for estimated time
     private val averageWalkingSpeedKmH = 5.0 // kilometers per hour
 
-    // Calories burned per step (estimation)
-    // This is a very rough estimate. More accurate methods use METs, weight, and time/distance.
-    // A common formula is Calories = METs * Weight (kg) * Duration (hours)
-    // For walking, METs is around 3.5-4.0.
-    // We can estimate calories per step based on average distance per step and average speed.
-    // Or use a simplified formula like Calories per km * Distance (km)
-    private fun estimateCaloriesPerKm(profile: UserProfile?): Double {
-        // Rough estimation: depends heavily on weight.
-        // A common value is around 50-60 kcal per km for an average adult.
-        // Let's use a formula: Calories per minute = (METs * weight in kg * 3.5) / 200
-        // METs for walking ~ 3.5-4.0. Let's use 3.8
-        // Time to walk 1 km at 5 km/h = 1 km / 5 km/h = 0.2 hours = 12 minutes
-        // Calories per km = Calories per minute * 12 minutes
-        // Calories per km = ((3.8 * (profile?.weightKg ?: 70.0) * 3.5) / 200) * 12
-        // Simplified: ~0.75 * weight in kg (very rough)
-        return 0.75 * (profile?.weightKg ?: 70.0) // Estimated calories per km
+    /**
+     * Estimates calories burned per kilometer based on user's weight.
+     * Uses a simplified heuristic: ~0.75 kcal per kg per km.
+     */
+    private fun estimateCaloriesPerKm(weightKg: Float): Double {
+        // Return a reasonable default if weight is invalid (e.g., 0 or negative)
+        if (weightKg <= 0) return 0.75 * 70.0 // Default for an average adult (70kg)
+
+        // Very rough estimation: Calories per km is approximately 0.75 * weight in kg
+        return 0.75 * weightKg
     }
 
 
     /**
-     * Calculates step metrics.
+     * Calculates step metrics (distance, estimated calories, estimated time).
      * @param steps The total number of steps.
      * @return StepMetrics containing distance, calories, and estimated time.
      */
     suspend operator fun invoke(steps: Int): StepMetrics {
-        // Fetch the user profile data
-        val userProfile = userProfileRepository.getUserProfile()
+
+        // Retrieve user data using firstOrNull() to get the latest value from the Flow
+        // and not suspend indefinitely. Returns null if the Flow is empty or produces null.
+        val userData: UserDataEntity? = userDataRepository.getUserData().firstOrNull()
+
+        // Extract user profile data, providing default values if userData is null or fields are invalid
+        val weightKg =
+            userData?.weight?.takeIf { it > 0 } ?: 70f // Default to 70kg if data missing or invalid
+        val heightCm = userData?.height?.takeIf { it > 0 }
+            ?: 170f // Default to 170cm if data missing or invalid
+        val gender = userData?.gender ?: Gender.MALE // Default to MALE if data missing
 
         // 1. Estimate Distance
-        val strideLengthMeters = estimateStrideLength(userProfile)
+        val strideLengthMeters = estimateStrideLength(heightCm, gender)
         val distanceMeters = steps * strideLengthMeters
         val distanceKm = distanceMeters / 1000.0
 
         // 2. Estimate Time (based on average walking speed)
         // This is an ESTIMATION. Actual time depends on the user's actual walking speed.
-        // If you were tracking the duration of the 'isRecording' state, you could use that.
+        // If you were tracking the duration of the activity, use that instead for accuracy.
         val estimatedTimeHours = distanceKm / averageWalkingSpeedKmH
-        val estimatedTimeMinutes = (estimatedTimeHours * 60).roundToInt()
+        // Ensure estimated time is not negative or NaN before rounding
+        val estimatedTimeMinutes =
+            (estimatedTimeHours * 60).takeIf { !it.isNaN() && it >= 0 }?.roundToInt() ?: 0
+
 
         // 3. Estimate Calories
-        val caloriesPerKm = estimateCaloriesPerKm(userProfile)
+        val caloriesPerKm = estimateCaloriesPerKm(weightKg)
         val caloriesBurned = distanceKm * caloriesPerKm
 
         return StepMetrics(
