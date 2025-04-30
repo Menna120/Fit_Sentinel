@@ -1,5 +1,6 @@
 package com.example.fit_sentinel.ui.screens.main.home
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.fit_sentinel.domain.usecase.CalculateStepMetricsUseCase
@@ -38,7 +39,6 @@ class HomeViewModel @Inject constructor(
     init {
         observeTodaySteps()
         observeStepHistory()
-//        startStepTracking()
     }
 
     private fun observeTodaySteps() {
@@ -98,6 +98,8 @@ class HomeViewModel @Inject constructor(
     private fun calculateAndPublishMetrics(steps: Int) {
         viewModelScope.launch {
             val metrics = calculateStepMetricsUseCase(steps)
+            Log.d("HomeViewModel", "Metrics: $metrics")
+
             _uiState.update {
                 it.copy(
                     distance = metrics.distanceKm.format(1),
