@@ -21,9 +21,7 @@ fun NavGraphBuilder.mainNavigation(
     composable<MainScreen.Onboarding> {
         OnboardingScreen {
             navController.navigate(MainScreen.Home) {
-                popUpTo(MainScreen.Onboarding) {
-                    inclusive = true
-                }
+                popUpTo(MainScreen.Home)
             }
         }
     }

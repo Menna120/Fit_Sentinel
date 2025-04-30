@@ -1,8 +1,8 @@
 package com.example.fit_sentinel.nav.nav_graph
 
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
@@ -50,7 +50,7 @@ fun AppNavGraph(
                         navBackStackEntry?.destination?.route == item.destination::class.qualifiedName
                     },
                     modifier = Modifier
-                        .safeDrawingPadding()
+                        .navigationBarsPadding()
                         .padding(8.dp)
                 )
             }

@@ -1,6 +1,5 @@
 package com.example.fit_sentinel.ui.screens.main.reports
 
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -29,6 +28,6 @@ fun ReportsScreen(
         dailyStepData = state.dailyStepDataList,
         onPreviousMonth = { viewModel.goToPreviousWeek() },
         onNextMonth = { viewModel.goToNextWeek() },
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
     )
 }

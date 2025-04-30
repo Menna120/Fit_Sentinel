@@ -30,15 +30,21 @@ fun HealthLayout(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(horizontal = 16.dp),
         verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
         ScaleIndicatorBar(value, categoryLabel) { onEditClick() }
 
-        Text("Recommendation Trainings", style = MaterialTheme.typography.titleMedium)
+        Text(
+            "Recommendation Trainings",
+            color = MaterialTheme.colorScheme.onBackground,
+            style = MaterialTheme.typography.titleMedium
+        )
 
         LazyColumn(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
             itemsIndexed(exercises) { index, exercise ->

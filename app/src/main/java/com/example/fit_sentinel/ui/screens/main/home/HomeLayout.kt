@@ -41,7 +41,7 @@ fun HomeLayout(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(horizontal = 16.dp),
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.Start
     ) {
@@ -53,6 +53,7 @@ fun HomeLayout(
 
         Text(
             text = "Today",
+            color = MaterialTheme.colorScheme.onBackground,
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(start = 16.dp)
         )

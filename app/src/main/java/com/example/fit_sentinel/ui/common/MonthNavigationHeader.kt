@@ -33,6 +33,7 @@ fun MonthNavigationHeader(
         IconButton(onClick = onPreviousMonth) {
             Icon(
                 painter = painterResource(R.drawable.down_arrow),
+                tint = MaterialTheme.colorScheme.onBackground,
                 contentDescription = "Previous Month"
             )
         }
@@ -46,6 +47,7 @@ fun MonthNavigationHeader(
         IconButton(onClick = onNextMonth) {
             Icon(
                 painter = painterResource(R.drawable.up_arrow),
+                tint = MaterialTheme.colorScheme.onBackground,
                 contentDescription = "Next Month"
             )
         }

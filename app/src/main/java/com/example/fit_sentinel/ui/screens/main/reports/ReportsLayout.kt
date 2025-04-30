@@ -38,8 +38,8 @@ fun ReportsLayout(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+            .padding(horizontal = 16.dp),
+        verticalArrangement = Arrangement.SpaceBetween
     ) {
         MonthNavigationHeader(currentDate, onPreviousMonth, onNextMonth)
 
@@ -49,7 +49,11 @@ fun ReportsLayout(
 
         ProgressCalendar(dailyProgress)
 
-        Text("Statics", style = MaterialTheme.typography.titleLarge)
+        Text(
+            "Statics",
+            color = MaterialTheme.colorScheme.onBackground,
+            style = MaterialTheme.typography.titleLarge
+        )
 
         StaticsChart(dailyStepData)
     }

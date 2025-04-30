@@ -16,7 +16,6 @@ data class OnboardingUiState(
     val selectedAge: Int = 20,
     val targetWeight: Float = selectedWeightValue.toFloat(),
     val targetWeightPlaceholder: String = "50",
-    val currentPageIndex: Int = OnboardingScreen.INTRO.ordinal,
     val totalPages: Int = OnboardingScreen.entries.size,
     val weightUnits: List<WeightUnit> = WeightUnit.entries,
     val heightUnits: List<HeightUnit> = HeightUnit.entries

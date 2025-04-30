@@ -1,6 +1,7 @@
 package com.example.fit_sentinel.ui.screens.on_boarding
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInHorizontally
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,9 +11,9 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -30,39 +31,36 @@ import com.example.fit_sentinel.ui.screens.on_boarding.pages.NamePage
 import com.example.fit_sentinel.ui.screens.on_boarding.pages.SmokingPage
 import com.example.fit_sentinel.ui.screens.on_boarding.pages.TargetWeightPage
 import com.example.fit_sentinel.ui.screens.on_boarding.pages.WeightPage
+import kotlinx.coroutines.launch
 
 @Composable
 fun OnboardingScreen(
     viewModel: OnboardingViewModel = hiltViewModel(),
     onOnboardingComplete: () -> Unit,
 ) {
-    val uiState by viewModel.uiState.collectAsState()
-    val isCurrentPageValid by viewModel.isCurrentPageValid.collectAsState()
-    val showSkipButton by viewModel.showSkipButton.collectAsState()
-    val showPreviousButton by viewModel.showPreviousButton.collectAsState()
-    val isLastPage by viewModel.isLastPage.collectAsState()
-
-
     val pagerState = rememberPagerState(
-        initialPage = uiState.currentPageIndex,
-        pageCount = { uiState.totalPages }
+        initialPage = OnboardingScreen.INTRO.ordinal,
+        pageCount = { OnboardingScreen.entries.size }
     )
 
-    LaunchedEffect(uiState.currentPageIndex) {
-        if (pagerState.currentPage != uiState.currentPageIndex) {
-            pagerState.animateScrollToPage(uiState.currentPageIndex)
-        }
-    }
+    val uiState by viewModel.uiState.collectAsState()
 
+    val isCurrentPageValid by viewModel.isCurrentPageValid(pagerState.currentPage).collectAsState()
+    val showPreviousButton by viewModel.showPreviousButton(pagerState.currentPage).collectAsState()
+    val isLastPage by viewModel.isLastPage(pagerState.currentPage).collectAsState()
+
+    val scope = rememberCoroutineScope()
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
             if (showPreviousButton) {
                 OnboardingProgressBar(
-                    currentStep = uiState.currentPageIndex,
-                    totalSteps = uiState.totalPages,
-                    onBackClick = viewModel::onPreviousPage
+                    currentStep = pagerState.currentPage,
+                    totalSteps = pagerState.pageCount,
+                    onBackClick = {
+                        scope.launch { pagerState.animateScrollToPage(pagerState.currentPage - 1) }
+                    }
                 )
             }
         }
@@ -86,7 +84,9 @@ fun OnboardingScreen(
                 when (OnboardingScreen.entries.getOrNull(page)) {
                     OnboardingScreen.INTRO -> {
                         IntroPage {
-                            viewModel.onNextPage()
+                            scope.launch {
+                                pagerState.animateScrollToPage(pagerState.currentPage + 1)
+                            }
                         }
                     }
 
@@ -147,10 +147,10 @@ fun OnboardingScreen(
 
                     OnboardingScreen.TARGET_WEIGHT -> {
                         TargetWeightPage(
-                            targetWeight = uiState.targetWeight.toString(),
+                            targetWeight = uiState.targetWeightPlaceholder,
                             targetWeightPlaceholder = uiState.targetWeightPlaceholder,
                             weightUnit = uiState.selectedWeightUnit.name.lowercase(),
-                            onTargetWeightChange = { viewModel.onTargetWeightChange(it.toFloat()) }
+                            onTargetWeightChange = viewModel::onTargetWeightChange
                         )
                     }
 
@@ -158,7 +158,10 @@ fun OnboardingScreen(
                 }
             }
 
-            AnimatedVisibility(uiState.currentPageIndex > OnboardingScreen.INTRO.ordinal) {
+            AnimatedVisibility(
+                pagerState.currentPage > OnboardingScreen.INTRO.ordinal,
+                enter = slideInHorizontally(initialOffsetX = { it })
+            ) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth(.8f)
@@ -166,22 +169,15 @@ fun OnboardingScreen(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    AnimatedVisibility(showSkipButton) {
-                        MainButton(
-                            onClick = viewModel::onSkipIllness,
-                            text = "Skip",
-                            showIcon = false,
-                            enabled = true
-                        )
-                    }
-
                     MainButton(
                         onClick = {
                             if (isLastPage) {
                                 viewModel.onOnboardingComplete()
                                 onOnboardingComplete()
                             } else {
-                                viewModel.onNextPage()
+                                scope.launch {
+                                    pagerState.animateScrollToPage(pagerState.currentPage + 1)
+                                }
                             }
                         },
                         text = if (isLastPage) "Finish" else "Continue",

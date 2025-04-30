@@ -65,7 +65,11 @@ fun ExerciseDetailsLayout(
                     .aspectRatio(1f)
             )
             HorizontalPager(
-                state = pagerState, modifier = Modifier.fillMaxWidth(.8f), userScrollEnabled = false
+                state = pagerState,
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth(.8f),
+                userScrollEnabled = false
             ) { page ->
                 Column(
                     modifier = Modifier.fillMaxWidth(),

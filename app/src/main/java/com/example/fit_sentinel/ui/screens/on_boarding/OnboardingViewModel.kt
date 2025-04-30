@@ -13,10 +13,9 @@ import com.example.fit_sentinel.ui.screens.on_boarding.model.OnboardingUiState
 import com.example.fit_sentinel.ui.screens.on_boarding.model.SmokingOption
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -30,9 +29,9 @@ class OnboardingViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(OnboardingUiState())
     val uiState: StateFlow<OnboardingUiState> = _uiState.asStateFlow()
 
-    val isCurrentPageValid: StateFlow<Boolean> =
-        uiState.combine(uiState) { _, state ->
-            when (OnboardingScreen.entries.getOrNull(state.currentPageIndex)) {
+    fun isCurrentPageValid(currentPageIndex: Int): StateFlow<Boolean> =
+        uiState.map { state ->
+            when (OnboardingScreen.entries.getOrNull(currentPageIndex)) {
                 OnboardingScreen.INTRO -> true
                 OnboardingScreen.NAME -> state.name.isNotBlank()
                 OnboardingScreen.GENDER -> state.gender != null
@@ -46,37 +45,27 @@ class OnboardingViewModel @Inject constructor(
             }
         }.stateIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000L),
+            started = kotlinx.coroutines.flow.SharingStarted.WhileSubscribed(5000L),
             initialValue = true
         )
 
-    val showSkipButton: StateFlow<Boolean> =
-        uiState.combine(uiState) { _, state ->
-            OnboardingScreen.entries.getOrNull(state.currentPageIndex) == OnboardingScreen.ILLNESS
+    fun showPreviousButton(currentPageIndex: Int): StateFlow<Boolean> =
+        uiState.map {
+            currentPageIndex > OnboardingScreen.INTRO.ordinal
         }.stateIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000L),
+            started = kotlinx.coroutines.flow.SharingStarted.WhileSubscribed(5000L),
             initialValue = false
         )
 
-    val showPreviousButton: StateFlow<Boolean> =
-        uiState.combine(uiState) { _, state ->
-            state.currentPageIndex > OnboardingScreen.INTRO.ordinal
+    fun isLastPage(currentPageIndex: Int): StateFlow<Boolean> =
+        uiState.map {
+            currentPageIndex == OnboardingScreen.entries.size - 1
         }.stateIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000L),
+            started = kotlinx.coroutines.flow.SharingStarted.WhileSubscribed(5000L),
             initialValue = false
         )
-
-    val isLastPage: StateFlow<Boolean> =
-        uiState.combine(uiState) { _, state ->
-            state.currentPageIndex == OnboardingScreen.entries.size - 1
-        }.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000L),
-            initialValue = false
-        )
-
 
     fun onNameChange(name: String) {
         _uiState.update { it.copy(name = name) }
@@ -99,7 +88,12 @@ class OnboardingViewModel @Inject constructor(
     }
 
     fun onWeightValueChange(value: Int) {
-        _uiState.update { it.copy(selectedWeightValue = value) }
+        _uiState.update {
+            it.copy(
+                selectedWeightValue = value,
+                targetWeightPlaceholder = value.toString()
+            )
+        }
     }
 
     fun onHeightUnitSelected(unit: HeightUnit) {
@@ -114,51 +108,34 @@ class OnboardingViewModel @Inject constructor(
         _uiState.update { it.copy(selectedAge = age) }
     }
 
-    fun onTargetWeightChange(targetWeight: Float) {
-        _uiState.update { it.copy(targetWeight = targetWeight) }
-    }
-
-    fun onNextPage() {
-        if (_uiState.value.currentPageIndex < OnboardingScreen.entries.size - 1) {
-            _uiState.update { it.copy(currentPageIndex = it.currentPageIndex + 1) }
-        }
-    }
-
-    fun onPreviousPage() {
-        if (_uiState.value.currentPageIndex > OnboardingScreen.INTRO.ordinal) {
-            _uiState.update { it.copy(currentPageIndex = it.currentPageIndex - 1) }
-        }
-    }
-
-    fun onSkipIllness() {
-        val illnessPageIndex = OnboardingScreen.ILLNESS.ordinal
-        if (_uiState.value.currentPageIndex == illnessPageIndex) {
-            _uiState.update { it.copy(currentPageIndex = illnessPageIndex + 1) }
+    fun onTargetWeightChange(targetWeightString: String) {
+        _uiState.update {
+            val weightValue = targetWeightString.toFloatOrNull() ?: 0f
+            it.copy(targetWeight = weightValue, targetWeightPlaceholder = targetWeightString)
         }
     }
 
     fun onOnboardingComplete() {
-        saveUser()
         viewModelScope.launch {
+            saveUser()
             isOnboardingCompletedUseCase.save(true)
         }
     }
 
-    private fun saveUser() {
-        viewModelScope.launch {
-            val newUser = UserProfile(
-                name = _uiState.value.name,
-                gender = _uiState.value.gender ?: Gender.Male,
-                age = _uiState.value.selectedAge,
-                weight = _uiState.value.selectedWeightValue.toFloat(),
-                weightUnit = _uiState.value.selectedWeightUnit,
-                height = _uiState.value.selectedHeightValue,
-                heightUnit = _uiState.value.selectedHeightUnit,
-                goalWeight = _uiState.value.targetWeight,
-                chronicDiseases = _uiState.value.illnessDescription,
-                isSmoker = _uiState.value.smokingOption == SmokingOption.Smoking
-            )
-            saveUserUseCase(newUser)
-        }
+    private suspend fun saveUser() {
+        val currentState = _uiState.value
+        val newUser = UserProfile(
+            name = currentState.name.trim(),
+            gender = currentState.gender ?: Gender.Male,
+            age = currentState.selectedAge.coerceAtLeast(1),
+            weight = currentState.selectedWeightValue.toFloat().coerceAtLeast(0.1f),
+            weightUnit = currentState.selectedWeightUnit,
+            height = currentState.selectedHeightValue.coerceAtLeast(1),
+            heightUnit = currentState.selectedHeightUnit,
+            goalWeight = currentState.targetWeight.coerceAtLeast(0.1f),
+            chronicDiseases = currentState.illnessDescription.trim(),
+            isSmoker = currentState.smokingOption == SmokingOption.Smoking
+        )
+        saveUserUseCase(newUser)
     }
 }

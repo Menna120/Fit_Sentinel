@@ -1,6 +1,7 @@
 package com.example.fit_sentinel.ui.screens.on_boarding.pages
 
 import androidx.annotation.DrawableRes
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -85,7 +86,7 @@ fun SelectionCard(
     onCardClick: (Any) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    MainCard(modifier = modifier) {
+    MainCard(modifier = modifier.clickable { onCardClick(option) }) {
         Box(modifier = Modifier.fillMaxSize()) {
             Icon(
                 painter = painterResource(id = icon),
