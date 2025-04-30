@@ -13,8 +13,8 @@ class Converters {
     fun toGender(genderString: String): Gender {
         return try {
             Gender.valueOf(genderString)
-        } catch (e: IllegalArgumentException) {
-            Gender.PreferNotToSay
+        } catch (_: IllegalArgumentException) {
+            Gender.Male
         }
     }
 

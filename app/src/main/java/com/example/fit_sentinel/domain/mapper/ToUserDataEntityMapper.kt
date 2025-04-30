@@ -21,6 +21,7 @@ fun UserProfile.toUserDataEntity(): UserDataEntity {
     val bmiCategory = calculateBmiCategory(bmi)
 
     return UserDataEntity(
+        id = 1,
         name = this.name,
         gender = this.gender,
         age = this.age,

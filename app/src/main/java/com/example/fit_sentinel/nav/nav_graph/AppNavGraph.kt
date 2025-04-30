@@ -9,6 +9,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
@@ -53,7 +54,9 @@ fun AppNavGraph(
                         .padding(8.dp)
                 )
             }
-        }
+        },
+        containerColor = Color.Transparent,
+        contentColor = Color.Transparent
     ) { innerPadding ->
         NavHost(
             navController = navController,

@@ -10,6 +10,7 @@ import com.example.fit_sentinel.ui.screens.main.health.HealthScreen
 import com.example.fit_sentinel.ui.screens.main.health.HealthViewModel
 import com.example.fit_sentinel.ui.screens.main.home.HomeScreen
 import com.example.fit_sentinel.ui.screens.main.reports.ReportsScreen
+import com.example.fit_sentinel.ui.screens.main.settings.SettingScreen
 import com.example.fit_sentinel.ui.screens.on_boarding.OnboardingScreen
 
 fun NavGraphBuilder.mainNavigation(
@@ -39,7 +40,7 @@ fun NavGraphBuilder.mainNavigation(
         }
     }
 
-    composable<MainScreen.Settings> { }
+    composable<MainScreen.Settings> { SettingScreen() }
 
     composable<MainScreen.ExerciseData> {
         val exerciseDetails: MainScreen.ExerciseData = it.toRoute()

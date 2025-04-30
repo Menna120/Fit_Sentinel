@@ -1,7 +1,6 @@
 package com.example.fit_sentinel.nav.bottom_nav_bar
 
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
@@ -34,6 +33,10 @@ fun BottomNavBar(
     MainCard(
         modifier = modifier,
         shape = CircleShape,
+        colors = CardDefaults.cardColors(
+            containerColor = Color.Transparent,
+            contentColor = Color.Transparent
+        ),
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
         NavigationBar(
@@ -45,13 +48,7 @@ fun BottomNavBar(
 
                 val indicatorBackgroundColor by animateColorAsState(
                     targetValue = if (selected) MaterialTheme.colorScheme.background else Color.Transparent,
-                    animationSpec = tween(durationMillis = 300),
                     label = "indicator background color animation"
-                )
-
-                val iconColor by animateColorAsState(
-                    targetValue = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.background,
-                    animationSpec = tween(durationMillis = 300), label = "icon color animation"
                 )
 
                 NavigationBarItem(
@@ -69,7 +66,6 @@ fun BottomNavBar(
                                         .padding(8.dp)
                                     else Modifier
                                 ),
-                            tint = iconColor
                         )
                     },
                     colors = NavigationBarItemDefaults.colors(
@@ -81,7 +77,6 @@ fun BottomNavBar(
             }
         }
     }
-
 }
 
 @Preview
