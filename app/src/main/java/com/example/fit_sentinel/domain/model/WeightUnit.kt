@@ -1,3 +1,5 @@
 package com.example.fit_sentinel.domain.model
 
-enum class WeightUnit { KG, LBS }
+enum class WeightUnit {
+    Kg, Lbs
+}

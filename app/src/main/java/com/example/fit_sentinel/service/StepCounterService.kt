@@ -4,16 +4,15 @@ import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
-import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
-import androidx.lifecycle.LifecycleService // Use LifecycleService for easier scope management
+import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
-import com.example.fit_sentinel.MainActivity
 import com.example.fit_sentinel.R
 import com.example.fit_sentinel.domain.repository.StepRepository
 import com.example.fit_sentinel.domain.repository.StepSensorManager
+import com.example.fit_sentinel.main_activity.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch

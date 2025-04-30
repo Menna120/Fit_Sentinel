@@ -1,7 +1,7 @@
 package com.example.fit_sentinel.data.local.db
 
 import androidx.room.TypeConverter
-import com.example.fit_sentinel.data.model.Gender
+import com.example.fit_sentinel.domain.model.Gender
 
 class Converters {
     @TypeConverter
@@ -14,7 +14,7 @@ class Converters {
         return try {
             Gender.valueOf(genderString)
         } catch (e: IllegalArgumentException) {
-            Gender.PREFER_NOT_TO_SAY
+            Gender.PreferNotToSay
         }
     }
 

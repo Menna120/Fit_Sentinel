@@ -1,0 +1,195 @@
+package com.example.fit_sentinel.ui.screens.on_boarding
+
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.fit_sentinel.ui.common.MainButton
+import com.example.fit_sentinel.ui.screens.on_boarding.components.OnboardingProgressBar
+import com.example.fit_sentinel.ui.screens.on_boarding.model.OnboardingScreen
+import com.example.fit_sentinel.ui.screens.on_boarding.model.SmokingOption
+import com.example.fit_sentinel.ui.screens.on_boarding.pages.AgePage
+import com.example.fit_sentinel.ui.screens.on_boarding.pages.GenderPage
+import com.example.fit_sentinel.ui.screens.on_boarding.pages.HeightPage
+import com.example.fit_sentinel.ui.screens.on_boarding.pages.IllnessPage
+import com.example.fit_sentinel.ui.screens.on_boarding.pages.IntroPage
+import com.example.fit_sentinel.ui.screens.on_boarding.pages.NamePage
+import com.example.fit_sentinel.ui.screens.on_boarding.pages.SmokingPage
+import com.example.fit_sentinel.ui.screens.on_boarding.pages.TargetWeightPage
+import com.example.fit_sentinel.ui.screens.on_boarding.pages.WeightPage
+
+@Composable
+fun OnboardingScreen(
+    viewModel: OnboardingViewModel = hiltViewModel(),
+    onOnboardingComplete: () -> Unit,
+) {
+    val uiState by viewModel.uiState.collectAsState()
+    val isCurrentPageValid by viewModel.isCurrentPageValid.collectAsState()
+    val showSkipButton by viewModel.showSkipButton.collectAsState()
+    val showPreviousButton by viewModel.showPreviousButton.collectAsState()
+    val isLastPage by viewModel.isLastPage.collectAsState()
+
+
+    val pagerState = rememberPagerState(
+        initialPage = uiState.currentPageIndex,
+        pageCount = { uiState.totalPages }
+    )
+
+    LaunchedEffect(uiState.currentPageIndex) {
+        if (pagerState.currentPage != uiState.currentPageIndex) {
+            pagerState.animateScrollToPage(uiState.currentPageIndex)
+        }
+    }
+
+
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        topBar = {
+            if (showPreviousButton) {
+                OnboardingProgressBar(
+                    currentStep = uiState.currentPageIndex,
+                    totalSteps = uiState.totalPages,
+                    onBackClick = viewModel::onPreviousPage
+                )
+            }
+        }
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(bottom = 24.dp)
+                .padding(innerPadding)
+                .padding(horizontal = 16.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            HorizontalPager(
+                state = pagerState,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
+                userScrollEnabled = false
+            ) { page ->
+                when (OnboardingScreen.entries.getOrNull(page)) {
+                    OnboardingScreen.INTRO -> {
+                        IntroPage {
+                            viewModel.onNextPage()
+                        }
+                    }
+
+                    OnboardingScreen.NAME -> {
+                        NamePage(
+                            name = uiState.name,
+                            onNameChange = viewModel::onNameChange
+                        )
+                    }
+
+                    OnboardingScreen.GENDER -> {
+                        GenderPage(
+                            selectedGender = uiState.gender,
+                            onGenderSelected = viewModel::onGenderSelected
+                        )
+                    }
+
+                    OnboardingScreen.SMOKING -> {
+                        SmokingPage(
+                            selectedSmokingOption = uiState.smokingOption,
+                            onSmokingOptionClick = { viewModel.onSmokingOptionClick(it as SmokingOption) }
+                        )
+                    }
+
+                    OnboardingScreen.ILLNESS -> {
+                        IllnessPage(
+                            illnessDescription = uiState.illnessDescription,
+                            onDescriptionChange = viewModel::onDescriptionChange
+                        )
+                    }
+
+                    OnboardingScreen.WEIGHT -> {
+                        WeightPage(
+                            selectedUnit = uiState.selectedWeightUnit,
+                            units = uiState.weightUnits,
+                            selectedWeightValue = uiState.selectedWeightValue,
+                            onUnitSelected = viewModel::onWeightUnitSelected,
+                            onValueChange = viewModel::onWeightValueChange
+                        )
+                    }
+
+                    OnboardingScreen.HEIGHT -> {
+                        HeightPage(
+                            selectedUnit = uiState.selectedHeightUnit,
+                            units = uiState.heightUnits,
+                            selectedHeightValue = uiState.selectedHeightValue,
+                            onUnitSelected = viewModel::onHeightUnitSelected,
+                            onValueChange = viewModel::onHeightValueChange
+                        )
+                    }
+
+                    OnboardingScreen.AGE -> {
+                        AgePage(
+                            selectedAge = uiState.selectedAge,
+                            onAgeChange = viewModel::onAgeChange
+                        )
+                    }
+
+                    OnboardingScreen.TARGET_WEIGHT -> {
+                        TargetWeightPage(
+                            targetWeight = uiState.targetWeight.toString(),
+                            targetWeightPlaceholder = uiState.targetWeightPlaceholder,
+                            weightUnit = uiState.selectedWeightUnit.name.lowercase(),
+                            onTargetWeightChange = { viewModel.onTargetWeightChange(it.toFloat()) }
+                        )
+                    }
+
+                    null -> Unit
+                }
+            }
+
+            AnimatedVisibility(uiState.currentPageIndex > OnboardingScreen.INTRO.ordinal) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth(.8f)
+                        .padding(vertical = 16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    AnimatedVisibility(showSkipButton) {
+                        MainButton(
+                            onClick = viewModel::onSkipIllness,
+                            text = "Skip",
+                            showIcon = false,
+                            enabled = true
+                        )
+                    }
+
+                    MainButton(
+                        onClick = {
+                            if (isLastPage) {
+                                viewModel.onOnboardingComplete()
+                                onOnboardingComplete()
+                            } else {
+                                viewModel.onNextPage()
+                            }
+                        },
+                        text = if (isLastPage) "Finish" else "Continue",
+                        showIcon = false,
+                        enabled = isCurrentPageValid
+                    )
+                }
+            }
+        }
+    }
+}

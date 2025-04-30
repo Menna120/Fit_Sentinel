@@ -16,7 +16,7 @@ import javax.inject.Singleton
 object NetworkModule {
 
     @Provides
-    fun provideBaseUrl(): String = "https://your_api_base_url.com/"
+    fun provideBaseUrl(): String = "https://eb5e-41-42-171-219.ngrok-free.app/"
 
     @Provides
     @Singleton

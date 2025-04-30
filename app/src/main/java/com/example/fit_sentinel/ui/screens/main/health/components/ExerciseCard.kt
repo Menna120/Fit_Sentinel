@@ -5,7 +5,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -37,7 +36,7 @@ fun ExerciseCard(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(8.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
@@ -45,8 +44,7 @@ fun ExerciseCard(
                 painter = painterResource(R.drawable.exercise),
                 contentDescription = "Exercise Illustration",
                 modifier = Modifier
-                    .aspectRatio(1.3f)
-                    .weight(1f)
+                    .size(123.dp, 100.dp)
                     .border(
                         width = 1.dp,
                         shape = RoundedCornerShape(24.dp),

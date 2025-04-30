@@ -4,9 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.fit_sentinel.data.remote.dto.Exercise
 import com.example.fit_sentinel.domain.model.HeightUnit
-import com.example.fit_sentinel.domain.model.UserProfile
 import com.example.fit_sentinel.domain.model.WeightUnit
-import com.example.fit_sentinel.domain.usecase.GetRecommendationsUseCase
 import com.example.fit_sentinel.domain.usecase.user_data.CalculateActivityLevelUseCase
 import com.example.fit_sentinel.domain.usecase.user_data.GetUserDataUseCase
 import com.example.fit_sentinel.domain.usecase.user_data.UpdateUserProfileUseCase
@@ -21,34 +19,20 @@ import javax.inject.Inject
 @HiltViewModel
 class HealthViewModel @Inject constructor(
     private val getUserDataUseCase: GetUserDataUseCase,
-    private val recommendationsUseCase: GetRecommendationsUseCase,
     private val updateUserProfileUseCase: UpdateUserProfileUseCase,
     private val calculateActivityLevelUseCase: CalculateActivityLevelUseCase
 ) : ViewModel() {
+
     private val _state = MutableStateFlow(HealthUiState())
     val state: StateFlow<HealthUiState> = _state.asStateFlow()
 
     init {
-//        viewModelScope.launch {
-//            _recommendations.value = recommendationsUseCase(
-//                RecommendationRequest(
-//                    current_weight = "70 kg",
-//                    height = "160 cm",
-//                    age = "23",
-//                    activity_level = "Normal",
-//                    goal = "60 kg"
-//                )
-//            )
-//        }
-    }
-
-    init {
-        getRecommendations()
-        getUserDate()
+        updateUiState()
         getHealthData()
+        getRecommendations()
     }
 
-    fun saveUserData(weight: Float, weightUnit: WeightUnit, height: Float, heightUnit: HeightUnit) {
+    fun saveUserData(weight: Float, weightUnit: WeightUnit, height: Int, heightUnit: HeightUnit) {
         viewModelScope.launch {
             _state.update {
                 it.copy(
@@ -56,7 +40,8 @@ class HealthViewModel @Inject constructor(
                         weight = weight,
                         weightUnit = weightUnit,
                         height = height,
-                        heightUnit = heightUnit,
+                        heightUnit = heightUnit
+
                     )
                 )
             }
@@ -64,7 +49,7 @@ class HealthViewModel @Inject constructor(
         }
     }
 
-    private fun getUserDate() {
+    private fun updateUiState() {
         viewModelScope.launch {
             getUserDataUseCase().collect { user ->
                 _state.update { it.copy(userProfile = user) }
@@ -72,31 +57,49 @@ class HealthViewModel @Inject constructor(
         }
     }
 
-    private fun getRecommendations() {
+    fun getRecommendations() {
+//        viewModelScope.launch {
+//            recommendationsUseCase(
+//                RecommendationRequest(
+//                    current_weight = _state.value.userProfile.weight,
+//                    height = _state.value.userProfile.height,
+//                    age = _state.value.userProfile.age,
+//                    activity_lvl = _state.value.userProfile.activityLevel,
+//                    body_goal = _state.value.userProfile.goalWeight
+//                )
+//            ).collect { result ->
+//                Log.d("HealthViewModel", result.toString())
+//                _state.update {
+//                    it.copy(
+//                        recommendations = result
+//                    )
+//                }
+//            }
+//        }
         viewModelScope.launch {
             _state.update {
                 it.copy(
                     recommendations = listOf(
                         Exercise(
-                            exercise_name = "Barbell Squats",
+                            exerciseName = "Barbell Squats",
                             sets = 3,
                             reps = 12,
                             description = "Full range of motion, focus on form. Use a weight that challenges you while maintaining good technique."
                         ),
                         Exercise(
-                            exercise_name = "Barbell Squats",
+                            exerciseName = "Barbell Squats",
                             sets = 3,
                             reps = 12,
                             description = "Full range of motion, focus on form. Use a weight that challenges you while maintaining good technique."
                         ),
                         Exercise(
-                            exercise_name = "Barbell Squats",
+                            exerciseName = "Barbell Squats",
                             sets = 3,
                             reps = 12,
                             description = "Full range of motion, focus on form. Use a weight that challenges you while maintaining good technique."
                         ),
                         Exercise(
-                            exercise_name = "Barbell Squats",
+                            exerciseName = "Barbell Squats",
                             sets = 3,
                             reps = 12,
                             description = "Full range of motion, focus on form. Use a weight that challenges you while maintaining good technique."
@@ -110,8 +113,11 @@ class HealthViewModel @Inject constructor(
     private fun getHealthData() {
         viewModelScope.launch {
             val activityLevel = calculateActivityLevelUseCase()
-
-            _state.update { it.copy(categoryLabel = activityLevel.toString()) }
+            _state.update {
+                it.copy(
+                    userProfile = _state.value.userProfile.copy(activityLevel = activityLevel.toString())
+                )
+            }
         }
     }
 
@@ -126,11 +132,11 @@ class HealthViewModel @Inject constructor(
         }
         viewModelScope.launch {
             updateUserProfileUseCase(_state.value.userProfile)
-            getUserDate()
+            updateUiState()
         }
     }
 
-    fun updateHeight(height: Float, heightUnit: HeightUnit) {
+    fun updateHeight(height: Int, heightUnit: HeightUnit) {
         _state.update {
             it.copy(
                 userProfile = it.userProfile.copy(
@@ -141,13 +147,7 @@ class HealthViewModel @Inject constructor(
         }
         viewModelScope.launch {
             updateUserProfileUseCase(_state.value.userProfile)
-            getUserDate()
+            updateUiState()
         }
     }
 }
-
-data class HealthUiState(
-    val recommendations: List<Exercise> = emptyList(),
-    val userProfile: UserProfile = UserProfile(),
-    val categoryLabel: String = ""
-)

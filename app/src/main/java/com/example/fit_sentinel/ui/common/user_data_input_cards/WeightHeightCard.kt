@@ -1,18 +1,20 @@
 package com.example.fit_sentinel.ui.common.user_data_input_cards
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -39,17 +41,17 @@ import com.example.fit_sentinel.ui.theme.Fit_SentinelTheme
 @Composable
 fun WeightHeightCard(
     initialWeight: Float,
-    initialHeight: Float,
+    initialHeight: Int,
     onWeightChange: (Float, WeightUnit) -> Unit,
-    onHeightChange: (Float, HeightUnit) -> Unit,
+    onHeightChange: (Int, HeightUnit) -> Unit,
     modifier: Modifier = Modifier,
     onDismiss: () -> Unit
 ) {
     var weightText by remember { mutableStateOf(initialWeight.toString()) }
-    var selectedWeightUnit by remember { mutableStateOf(WeightUnit.KG) }
+    var selectedWeightUnit by remember { mutableStateOf(WeightUnit.Kg) }
 
     var heightText by remember { mutableStateOf(initialHeight.toString()) }
-    var selectedHeightUnit by remember { mutableStateOf(HeightUnit.CM) }
+    var selectedHeightUnit by remember { mutableStateOf(HeightUnit.Cm) }
 
     LaunchedEffect(weightText, selectedWeightUnit) {
         val weight = weightText.toFloatOrNull() ?: 0f
@@ -57,7 +59,7 @@ fun WeightHeightCard(
     }
 
     LaunchedEffect(heightText, selectedHeightUnit) {
-        val height = heightText.toFloatOrNull() ?: 0f
+        val height = heightText.toIntOrNull() ?: 0
         onHeightChange(height, selectedHeightUnit)
     }
 
@@ -116,7 +118,7 @@ fun <T> MeasurementInputRow(
 ) {
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(
@@ -162,26 +164,24 @@ fun UnitToggleChip(
     isSelected: Boolean,
     onClick: () -> Unit
 ) {
-    Surface(
+    Box(
         modifier = Modifier
-            .clickable(onClick = onClick)
-            .padding(horizontal = 8.dp)
+            .padding(8.dp)
             .border(
                 1.dp,
                 if (!isSelected) MaterialTheme.colorScheme.primary.copy(alpha = 0.2f) else MaterialTheme.colorScheme.primary,
                 CircleShape
             )
-            .clip(CircleShape),
-        color = if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent,
+            .clip(CircleShape)
+            .size(48.dp)
+            .background(if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent)
+            .clickable(onClick = onClick),
+        contentAlignment = Alignment.Center
     ) {
         Text(
             text = text,
             color = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onBackground,
-            modifier = Modifier.padding(
-                horizontal = 12.dp,
-                vertical = 6.dp
-            ),
-            fontSize = 14.sp
+            style = MaterialTheme.typography.bodyMedium.copy(fontSize = 16.sp)
         )
     }
 }
@@ -192,7 +192,7 @@ fun PreviewWeightHeightCard() {
     Fit_SentinelTheme {
         WeightHeightCard(
             initialWeight = 70f,
-            initialHeight = 170f,
+            initialHeight = 170,
             onWeightChange = { weight, unit ->
                 println("Weight changed to: $weight ${unit.name}")
             },

@@ -1,7 +1,7 @@
 package com.example.fit_sentinel.domain.usecase
 
 import com.example.fit_sentinel.data.local.entity.UserDataEntity
-import com.example.fit_sentinel.data.model.Gender
+import com.example.fit_sentinel.domain.model.Gender
 import com.example.fit_sentinel.domain.model.StepMetrics
 import com.example.fit_sentinel.domain.repository.UserDataRepository
 import kotlinx.coroutines.flow.firstOrNull
@@ -17,11 +17,11 @@ class CalculateStepMetricsUseCase @Inject constructor(
      * Uses a common formula: Height (cm) * factor (0.414 for men, 0.413 for women).
      * Returns stride length in meters.
      */
-    private fun estimateStrideLength(heightCm: Float, gender: Gender): Double {
+    private fun estimateStrideLength(heightCm: Int, gender: Gender): Double {
         // Return a reasonable default if height is invalid (e.g., 0 or negative)
         if (heightCm <= 0) return 0.70 // Default average stride length in meters
 
-        val factor = if (gender == Gender.MALE) 0.414 else 0.413
+        val factor = if (gender == Gender.Male) 0.414 else 0.413
         val strideCm = heightCm * factor
         return strideCm / 100.0 // Convert cm to meters
     }
@@ -57,8 +57,8 @@ class CalculateStepMetricsUseCase @Inject constructor(
         val weightKg =
             userData?.weight?.takeIf { it > 0 } ?: 70f // Default to 70kg if data missing or invalid
         val heightCm = userData?.height?.takeIf { it > 0 }
-            ?: 170f // Default to 170cm if data missing or invalid
-        val gender = userData?.gender ?: Gender.MALE // Default to MALE if data missing
+            ?: 170 // Default to 170cm if data missing or invalid
+        val gender = userData?.gender ?: Gender.Male // Default to MALE if data missing
 
         // 1. Estimate Distance
         val strideLengthMeters = estimateStrideLength(heightCm, gender)

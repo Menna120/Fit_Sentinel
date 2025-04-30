@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,6 +36,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.fit_sentinel.ui.theme.Fit_SentinelTheme
 import com.example.fit_sentinel.ui.theme.Purple40
 import kotlin.math.abs
 import kotlin.math.roundToInt
@@ -55,7 +55,7 @@ fun FadingScrollableRuler(
     pixelsPerUnitDp: Dp = 15.dp,
     rulerColor: Color = Purple40,
     tickTextColor: Color = Purple40,
-    valueTextStyle: TextStyle = LocalTextStyle.current.copy(fontSize = 20.sp),
+    valueTextStyle: TextStyle = MaterialTheme.typography.titleLarge.copy(fontSize = 26.sp),
     tickTextStyle: TextStyle = TextStyle(fontSize = 12.sp, textAlign = TextAlign.Center),
     minTickAlpha: Float = 0.4f,
     fadeWidthDp: Dp = 50.dp,
@@ -228,7 +228,7 @@ fun FadingScrollableRuler(
 @Preview(showBackground = true)
 @Composable
 fun PreviewFadingScrollableRuler() {
-    MaterialTheme {
+    Fit_SentinelTheme {
         FadingScrollableRuler(
             minValue = 0,
             maxValue = 200,

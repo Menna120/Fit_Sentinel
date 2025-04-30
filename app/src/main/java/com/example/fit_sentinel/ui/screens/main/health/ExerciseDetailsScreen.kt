@@ -65,14 +65,14 @@ fun ExerciseDetailsLayout(
                     .aspectRatio(1f)
             )
             HorizontalPager(
-                pagerState, modifier = Modifier.fillMaxWidth(.8f)
+                state = pagerState, modifier = Modifier.fillMaxWidth(.8f), userScrollEnabled = false
             ) { page ->
                 Column(
                     modifier = Modifier.fillMaxWidth(),
                     verticalArrangement = Arrangement.spacedBy(32.dp)
                 ) {
                     Text(
-                        exercisesList[page].exercise_name,
+                        exercisesList[page].exerciseName,
                         style = MaterialTheme.typography.headlineMedium,
                         color = MaterialTheme.colorScheme.primary
                     )
@@ -84,7 +84,7 @@ fun ExerciseDetailsLayout(
                     ExerciseDetailsRow(exercisesList[page].reps, exercisesList[page].sets)
                 }
             }
-            Row(modifier = Modifier.fillMaxWidth(.9f)) {
+            Row(modifier = Modifier.fillMaxWidth(.8f)) {
                 MainButton(
                     "Previous",
                     enablePrevious,
@@ -100,7 +100,7 @@ fun ExerciseDetailsLayout(
                             MaterialTheme.colorScheme.primary
                         )
                     ),
-                    textStyle = MaterialTheme.typography.headlineMedium.copy(fontSize = 24.sp)
+                    textStyle = MaterialTheme.typography.titleMedium.copy(fontSize = 20.sp)
                 ) {
                     scope.launch {
                         pagerState.animateScrollToPage(
@@ -109,13 +109,13 @@ fun ExerciseDetailsLayout(
                     }
                 }
 
-                Spacer(modifier = Modifier.weight(.1f))
+                Spacer(modifier = Modifier.weight(.2f))
 
                 MainButton(
                     "Next",
                     enableNext,
                     Modifier.weight(1f),
-                    textStyle = MaterialTheme.typography.headlineMedium.copy(fontSize = 24.sp)
+                    textStyle = MaterialTheme.typography.titleMedium.copy(fontSize = 20.sp)
                 ) {
                     scope.launch {
                         pagerState.animateScrollToPage(
@@ -144,25 +144,25 @@ private fun ExerciseDetailsLayoutPreview() {
             index = 2,
             exercisesList = listOf(
                 Exercise(
-                    exercise_name = "Barbell Squats",
+                    exerciseName = "Barbell Squats",
                     sets = 3,
                     reps = 12,
                     description = "Full range of motion, focus on form. Use a weight that challenges you while maintaining good technique."
                 ),
                 Exercise(
-                    exercise_name = "Barbell Squats",
+                    exerciseName = "Barbell Squats",
                     sets = 5,
                     reps = 12,
                     description = "Full range of motion, focus on form. Use a weight that challenges you while maintaining good technique."
                 ),
                 Exercise(
-                    exercise_name = "Barbell Squats",
+                    exerciseName = "Barbell Squats",
                     sets = 3,
                     reps = 12,
                     description = "Full range of motion, focus on form. Use a weight that challenges you while maintaining good technique."
                 ),
                 Exercise(
-                    exercise_name = "Barbell Squats",
+                    exerciseName = "Barbell Squats",
                     sets = 3,
                     reps = 12,
                     description = "Full range of motion, focus on form. Use a weight that challenges you while maintaining good technique."

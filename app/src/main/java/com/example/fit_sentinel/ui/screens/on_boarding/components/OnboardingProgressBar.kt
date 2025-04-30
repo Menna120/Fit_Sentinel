@@ -12,30 +12,25 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.fit_sentinel.R
-import com.example.fit_sentinel.ui.screens.on_boarding.OnboardingViewModel
 import com.example.fit_sentinel.ui.theme.Fit_SentinelTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OnboardingProgressBar(
+    currentStep: Int,
+    totalSteps: Int,
     modifier: Modifier = Modifier,
-    viewModel: OnboardingViewModel = hiltViewModel(),
     onBackClick: () -> Unit
 ) {
-    val currentStep by viewModel.currentStep.collectAsState()
-    val totalSteps by viewModel.totalSteps.collectAsState()
-
     val progress = if (totalSteps > 0) currentStep.toFloat() / totalSteps.toFloat() else 0f
 
     TopAppBar(
@@ -77,6 +72,9 @@ fun OnboardingProgressBar(
             }
         },
         modifier = modifier,
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = MaterialTheme.colorScheme.background
+        ),
         navigationIcon = {
             IconButton(onClick = onBackClick) {
                 Icon(
@@ -94,6 +92,6 @@ fun OnboardingProgressBar(
 @Composable
 private fun OnboardingProgressBarPreview() {
     Fit_SentinelTheme {
-        OnboardingProgressBar {}
+        OnboardingProgressBar(1, 9) {}
     }
 }
