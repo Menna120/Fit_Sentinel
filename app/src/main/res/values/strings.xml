@@ -1,3 +1,9 @@
 <resources>
-    <string name="app_name">Fit_Sentinel</string>
+    <string name="app_name">YourAppName</string>
+    <string name="personalized_program">Personalized Program</string>
+    <string name="back">Back</string>
+    <string name="continue_button">Continue</string>
+    <string name="skip_button">Skip</string>
+    <string name="do_you_have_chronic_diseases">Do you have any chronic diseases?</string>
+    <string name="describe_it_here">Describe it here</string>
 </resources>
