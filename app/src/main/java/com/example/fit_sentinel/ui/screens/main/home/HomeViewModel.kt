@@ -66,7 +66,7 @@ class HomeViewModel @Inject constructor(
                     val savedTodaySteps =
                         history.find { it.date == LocalDate.now() }?.totalSteps ?: 0
                     totalSteps =
-                        if (savedTodaySteps == _uiState.value.totalSteps) savedTodaySteps else savedTodaySteps + currentSessionSteps
+                        if (savedTodaySteps == _uiState.value.totalSteps && !_uiState.value.isRecording) savedTodaySteps else savedTodaySteps + currentSessionSteps
 
                     distance = selectedDayData?.distanceKm?.format(1) ?: "0.0"
                     calories = selectedDayData?.caloriesBurned?.roundToInt()?.toString() ?: "0"
