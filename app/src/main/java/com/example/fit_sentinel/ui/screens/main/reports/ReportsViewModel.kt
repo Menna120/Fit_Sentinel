@@ -2,18 +2,20 @@ package com.example.fit_sentinel.ui.screens.main.reports
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.fit_sentinel.data.local.entity.DailyStepsEntity
 import com.example.fit_sentinel.domain.usecase.GetWeeklyStepsUseCase
 import com.example.fit_sentinel.ui.screens.main.reports.model.DailyStepData
 import com.example.fit_sentinel.ui.screens.main.reports.model.DayProgress
-import com.example.fit_sentinel.ui.screens.main.reports.model.WeeklyReportState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
+import kotlin.math.roundToInt
 
 @HiltViewModel
 class ReportsViewModel @Inject constructor(
@@ -23,17 +25,29 @@ class ReportsViewModel @Inject constructor(
     private val _state = MutableStateFlow(WeeklyReportState())
     val state: StateFlow<WeeklyReportState> = _state.asStateFlow()
 
+    init {
+        val today = LocalDate.now()
+        val initialStartDate = today.minusDays(today.dayOfWeek.value.toLong() - 1)
+        val initialEndDate = initialStartDate.plusDays(6)
+        _state.update {
+            it.copy(
+                startDate = initialStartDate,
+                endDate = initialEndDate
+            )
+        }
+    }
+
     fun loadWeeklyData(startDate: LocalDate, endDate: LocalDate) {
-        _state.update { it.copy(startDate = startDate, endDate = endDate) }
+        _state.update { it.copy(startDate = startDate, endDate = endDate, isLoading = true) }
 
         viewModelScope.launch {
             getWeeklyStepsUseCase(startDate, endDate)
-                .collect { fetchedData ->
+                .collectLatest { fetchedData ->
                     val dailyProgress = mutableListOf<DayProgress>()
                     val dailyStepData = mutableListOf<DailyStepData>()
 
                     var totalSteps = 0.0
-                    var totalMinutes = 0
+                    var totalMinutes = 0L
                     var totalCals = 0.0
                     var totalDistance = 0.0
 
@@ -59,7 +73,7 @@ class ReportsViewModel @Inject constructor(
 
                         entityForDate?.let {
                             totalSteps += it.totalSteps
-                            totalMinutes += it.estimatedTimeMinutes ?: 0
+                            totalMinutes += it.estimatedTimeMinutes ?: 0L
                             totalCals += it.caloriesBurned ?: 0.0
                             totalDistance += it.distanceKm ?: 0.0
                         }
@@ -68,11 +82,11 @@ class ReportsViewModel @Inject constructor(
                     }
 
                     val totalTimeFormatted =
-                        if (totalMinutes > 0) "${totalMinutes / 60}h ${totalMinutes % 60}m" else "0"
+                        if (totalMinutes > 0L) "${totalMinutes / 60}h ${totalMinutes % 60}m" else "0h 0m"
                     val totalCaloriesFormatted =
-                        if (totalCals > 0) "${totalCals.toInt()} kcal" else "0"
+                        if (totalCals > 0) "${totalCals.roundToInt()} kcal" else "0 kcal"
                     val totalDistanceFormatted =
-                        if (totalDistance > 0) "%.1f km".format(totalDistance) else "0"
+                        if (totalDistance > 0) "%.1f km".format(totalDistance) else "0.0 km"
 
                     _state.update {
                         it.copy(
@@ -82,7 +96,8 @@ class ReportsViewModel @Inject constructor(
                             totalStepsThisWeek = totalSteps,
                             totalTimeThisWeek = totalTimeFormatted,
                             totalCaloriesThisWeek = totalCaloriesFormatted,
-                            totalDistanceThisWeek = totalDistanceFormatted
+                            totalDistanceThisWeek = totalDistanceFormatted,
+                            isLoading = false
                         )
                     }
                 }
@@ -100,4 +115,18 @@ class ReportsViewModel @Inject constructor(
         val newEndDate = _state.value.endDate.plusWeeks(1)
         loadWeeklyData(newStartDate, newEndDate)
     }
+
+    data class WeeklyReportState(
+        val startDate: LocalDate = LocalDate.now(),
+        val endDate: LocalDate = LocalDate.now(),
+        val targetSteps: Int = 10000,
+        val weeklyStepsData: List<DailyStepsEntity> = emptyList(),
+        val dailyProgressList: List<DayProgress> = emptyList(),
+        val dailyStepDataList: List<DailyStepData> = emptyList(),
+        val totalStepsThisWeek: Double = 0.0,
+        val totalTimeThisWeek: String = "0h 0m",
+        val totalCaloriesThisWeek: String = "0 kcal",
+        val totalDistanceThisWeek: String = "0.0 km",
+        val isLoading: Boolean = false
+    )
 }

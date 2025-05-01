@@ -44,7 +44,7 @@ class StepSensorManagerImpl @Inject constructor(
 
     // Step detection parameters (using a dynamic threshold)
     private var dynamicThresholdOffset =
-        3f // Offset above recent minimum for dynamic threshold (m/s^2) - Needs tuning
+        2f // Offset above recent minimum for dynamic threshold (m/s^2) - Needs tuning
     private val minStepIntervalNs: Long =
         250_000_000 // Minimum time between steps in nanoseconds (250ms)
 
@@ -67,7 +67,7 @@ class StepSensorManagerImpl @Inject constructor(
         false // Flag to indicate if gyro is available for orientation correction
 
     // Moving Average filter parameters for vertical acceleration
-    private val windowSize = 10 // Size of the moving average window
+    private val windowSize = 20 // Size of the moving average window
     private val movingAverageQueue = ArrayDeque<Float>() // Queue for moving average
 
     // Variables for dynamic threshold calculation (now based on moving average)

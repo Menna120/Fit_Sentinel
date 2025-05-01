@@ -3,9 +3,9 @@ package com.example.fit_sentinel.domain.model
 data class StepMetrics(
     val distanceKm: Double,
     val caloriesBurned: Double,
-    val estimatedTimeMinutes: Int
+    val estimatedTimeMinutes: Long
 ) {
     companion object {
-        val EMPTY = StepMetrics(0.0, 0.0, 0)
+        val EMPTY = StepMetrics(0.0, 0.0, 0L)
     }
 }

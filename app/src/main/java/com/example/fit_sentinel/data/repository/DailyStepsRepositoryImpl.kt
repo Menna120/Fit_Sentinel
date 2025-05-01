@@ -24,10 +24,6 @@ class DailyStepsRepositoryImpl @Inject constructor(
         return dailyStepsDao.getDailySteps(date)
     }
 
-    override suspend fun deleteOldData(dateThreshold: LocalDate) {
-        dailyStepsDao.deleteOldData(dateThreshold)
-    }
-
     override fun getDailyStepsForDateRange(
         startDate: LocalDate,
         endDate: LocalDate
@@ -35,12 +31,5 @@ class DailyStepsRepositoryImpl @Inject constructor(
         return dailyStepsDao.getAllDailySteps().map { allSteps ->
             allSteps.filter { it.date >= startDate && it.date <= endDate }
         }
-    }
-
-    override suspend fun getStepsBetween(
-        startDate: LocalDate,
-        endDate: LocalDate
-    ): List<DailyStepsEntity> {
-        return dailyStepsDao.getStepsBetween(startDate, endDate)
     }
 }

@@ -11,5 +11,5 @@ data class DailyStepsEntity(
     val lastUpdateTime: Long,
     val distanceKm: Double? = null,
     val caloriesBurned: Double? = null,
-    val estimatedTimeMinutes: Int? = null
+    val estimatedTimeMinutes: Long? = null
 )

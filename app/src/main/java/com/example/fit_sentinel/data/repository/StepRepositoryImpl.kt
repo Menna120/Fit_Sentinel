@@ -4,9 +4,9 @@ import android.util.Log
 import com.example.fit_sentinel.data.local.dao.DailyStepsDao
 import com.example.fit_sentinel.data.local.entity.DailyStepsEntity
 import com.example.fit_sentinel.data.model.SensorMode
+import com.example.fit_sentinel.domain.repository.StepMetricsRepository
 import com.example.fit_sentinel.domain.repository.StepRepository
 import com.example.fit_sentinel.domain.repository.StepSensorManager
-import com.example.fit_sentinel.domain.usecase.CalculateStepMetricsUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -20,7 +20,7 @@ class StepRepositoryImpl @Inject constructor(
     private val dailyStepsDao: DailyStepsDao,
     private val stepSensorManager: StepSensorManager,
     private val applicationScope: CoroutineScope,
-    private val calculateStepMetricsUseCase: CalculateStepMetricsUseCase
+    private val stepMetricsRepository: StepMetricsRepository
 ) : StepRepository {
 
     override val stepsFromSensor: Flow<Int> = stepSensorManager.currentSteps
@@ -30,7 +30,7 @@ class StepRepositoryImpl @Inject constructor(
     private var lastSavedSensorSteps = 0
 
     override fun getCurrentSessionStepsFlow(): Flow<Int> = flow {
-        stepSensorManager.currentSteps.collect { currentSessionSteps ->
+        stepsFromSensor.collect { currentSessionSteps ->
             emit(currentSessionSteps - lastSavedSensorSteps)
         }
     }
@@ -56,7 +56,7 @@ class StepRepositoryImpl @Inject constructor(
 
             val updatedTotalSteps = savedDailySteps.totalSteps + sessionStepsSinceLastSave
 
-            val metrics = calculateStepMetricsUseCase(updatedTotalSteps)
+            val metrics = stepMetricsRepository.getStepMetric(updatedTotalSteps)
 
             val updatedDailySteps = savedDailySteps.copy(
                 totalSteps = updatedTotalSteps,
@@ -89,8 +89,9 @@ class StepRepositoryImpl @Inject constructor(
     override fun stopStepTracking() {
         stepSensorManager.stopListening()
         applicationScope.launch {
-            val finalSessionSteps = stepSensorManager.currentSteps.value
-            saveSteps(finalSessionSteps)
+            stepsFromSensor.collect {
+                saveSteps(it)
+            }
         }
     }
 }

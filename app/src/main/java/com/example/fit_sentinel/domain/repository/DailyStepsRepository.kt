@@ -8,12 +8,8 @@ interface DailyStepsRepository {
     fun getAllDailySteps(): Flow<List<DailyStepsEntity>>
     suspend fun insertOrUpdateDailySteps(dailySteps: DailyStepsEntity)
     suspend fun getDailySteps(date: LocalDate): DailyStepsEntity?
-    suspend fun deleteOldData(dateThreshold: LocalDate)
     fun getDailyStepsForDateRange(
         startDate: LocalDate,
         endDate: LocalDate
     ): Flow<List<DailyStepsEntity>>
-
-    suspend fun getStepsBetween(startDate: LocalDate, endDate: LocalDate): List<DailyStepsEntity>
-
 }
