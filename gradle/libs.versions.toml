@@ -1,6 +1,5 @@
 [versions]
 agp = "8.9.1"
-cameraCore = "1.4.2"
 composeCharts = "0.1.2"
 coreSplashscreen = "1.0.1"
 kotlin = "2.1.10"
@@ -14,7 +13,6 @@ activityCompose = "1.10.1"
 composeBom = "2025.04.01"
 navigationCompose = "2.8.9"
 roomRuntime = "2.7.1"
-poseDetection = "18.0.0-beta5"
 serialization = "2.1.10"
 hiltAndroid = "2.56.2"
 hiltCompiler = "1.2.0"
@@ -25,11 +23,6 @@ ksp = "2.1.10-1.0.31"
 lifecycleService = "2.8.7"
 
 [libraries]
-androidx-camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "cameraCore" }
-androidx-camera-core = { module = "androidx.camera:camera-core", version.ref = "cameraCore" }
-androidx-camera-extensions = { module = "androidx.camera:camera-extensions", version.ref = "cameraCore" }
-androidx-camera-view = { module = "androidx.camera:camera-view", version.ref = "cameraCore" }
-androidx-camera-lifecycle = { module = "androidx.camera:camera-lifecycle", version.ref = "cameraCore" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
@@ -56,7 +49,6 @@ hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltA
 androidx-hilt-compiler = { module = "androidx.hilt:hilt-compiler", version.ref = "hiltCompiler" }
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltCompiler" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
-pose-detection-accurate = { module = "com.google.mlkit:pose-detection-accurate", version.ref = "poseDetection" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
 logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "loggingInterceptor" }
