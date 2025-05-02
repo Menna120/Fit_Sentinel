@@ -5,7 +5,6 @@
 
     <style name="Theme.Fit_Sentinel.Splash_screen" parent="Theme.SplashScreen">
         <item name="android:windowBackground">@drawable/splash_screen</item>
-        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_screen</item>
         <item name="postSplashScreenTheme">@style/Theme.Fit_Sentinel</item>
     </style>
 </resources>
