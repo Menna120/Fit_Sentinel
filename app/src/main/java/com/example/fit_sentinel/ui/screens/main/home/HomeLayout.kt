@@ -32,6 +32,7 @@ fun HomeLayout(
     time: String,
     calories: String,
     distance: String,
+    isRecording: Boolean,
     onPreviousMonth: () -> Unit,
     onNextMonth: () -> Unit,
     onDateSelected: (LocalDate) -> Unit,
@@ -68,6 +69,7 @@ fun HomeLayout(
         StepProgressDisplay(
             steps,
             targetSteps,
+            isRecording,
             onButtonClick,
             Modifier
                 .align(Alignment.CenterHorizontally)
@@ -86,6 +88,17 @@ private fun HomeLayoutPreview() {
     val onNextMonth = { selectedDate = selectedDate.plusMonths(1) }
 
     Fit_SentinelTheme {
-        HomeLayout(selectedDate, 0, 3000, "0", "0", "0", onPreviousMonth, onNextMonth, {}, {})
+        HomeLayout(
+            selectedDate,
+            0,
+            3000,
+            "0",
+            "0",
+            "0",
+            false,
+            onPreviousMonth,
+            onNextMonth,
+            {},
+            {})
     }
 }

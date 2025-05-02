@@ -13,10 +13,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -32,6 +28,7 @@ import com.example.fit_sentinel.ui.theme.Fit_SentinelTheme
 fun StepProgressDisplay(
     steps: Int,
     targetSteps: Int,
+    isRecording: Boolean,
     onButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
     labelText: String = "Steps",
@@ -40,8 +37,6 @@ fun StepProgressDisplay(
     buttonBackgroundColor: Color = MaterialTheme.colorScheme.primary,
     buttonIconColor: Color = MaterialTheme.colorScheme.onPrimary
 ) {
-    var buttonState by remember { mutableStateOf(false) }
-
     Arc(steps, targetSteps, modifier) {
         Column(
             modifier = Modifier.fillMaxHeight(),
@@ -72,16 +67,13 @@ fun StepProgressDisplay(
             }
 
             Button(
-                onClick = {
-                    buttonState = !buttonState
-                    onButtonClick()
-                },
+                onClick = onButtonClick,
                 colors = ButtonDefaults.buttonColors(containerColor = buttonBackgroundColor),
                 modifier = Modifier.size(50.dp),
                 shape = CircleShape,
                 contentPadding = PaddingValues(0.dp)
             ) {
-                AnimatedContent(targetState = buttonState, label = "") { isPlaying ->
+                AnimatedContent(targetState = isRecording, label = "") { isPlaying ->
                     Icon(
                         painter = painterResource(if (isPlaying) R.drawable.equal else R.drawable.play),
                         contentDescription = "Start/Stop",
@@ -104,6 +96,7 @@ fun PreviewStepProgressDisplay() {
         StepProgressDisplay(
             steps = 0,
             targetSteps = 6000,
+            isRecording = false,
             onButtonClick = {}
         )
     }

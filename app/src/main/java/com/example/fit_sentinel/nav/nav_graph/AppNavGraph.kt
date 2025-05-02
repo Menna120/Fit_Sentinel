@@ -25,7 +25,7 @@ fun AppNavGraph(
 ) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val showBottomBar by remember(navBackStackEntry) {
+    val showBottomBar by remember(navBackStackEntry?.destination) {
         derivedStateOf {
             val currentRoute = navBackStackEntry?.destination?.route
             navItems.any { it.destination::class.qualifiedName == currentRoute }

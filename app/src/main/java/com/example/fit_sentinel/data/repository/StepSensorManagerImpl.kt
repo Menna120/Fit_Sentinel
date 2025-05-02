@@ -130,7 +130,7 @@ class StepSensorManagerImpl @Inject constructor(
                 val registered = sensorManager.registerListener(
                     this,
                     stepCounterSensor,
-                    SensorManager.SENSOR_DELAY_NORMAL // SENSOR_DELAY_NORMAL is usually sufficient for TYPE_STEP_COUNTER
+                    SensorManager.SENSOR_DELAY_FASTEST
                 )
                 Log.d("StepSensorManager", "Registered HARDWARE listener: $registered")
             }
@@ -242,7 +242,7 @@ class StepSensorManagerImpl @Inject constructor(
         } else {
             // Calculate steps taken since the start of the session
             val stepsTaken =
-                (currentRawSteps - (initialHardwareSteps ?: currentRawSteps)).toInt()
+                (currentRawSteps - initialHardwareSteps!!).toInt()
 
             // Handle potential sensor reset or wrap-around
             if (stepsTaken < 0) {
