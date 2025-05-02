@@ -1,10 +1,12 @@
 package com.example.fit_sentinel.ui.screens.main.health
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.fit_sentinel.data.remote.dto.Exercise
+import com.example.fit_sentinel.data.remote.dto.AiRequest
 import com.example.fit_sentinel.domain.model.HeightUnit
 import com.example.fit_sentinel.domain.model.WeightUnit
+import com.example.fit_sentinel.domain.usecase.ai.GetRecommendationsUseCase
 import com.example.fit_sentinel.domain.usecase.user_data.CalculateActivityLevelUseCase
 import com.example.fit_sentinel.domain.usecase.user_data.GetUserDataUseCase
 import com.example.fit_sentinel.domain.usecase.user_data.UpdateUserProfileUseCase
@@ -20,6 +22,7 @@ import javax.inject.Inject
 class HealthViewModel @Inject constructor(
     private val getUserDataUseCase: GetUserDataUseCase,
     private val updateUserProfileUseCase: UpdateUserProfileUseCase,
+    private val recommendationsUseCase: GetRecommendationsUseCase,
     private val calculateActivityLevelUseCase: CalculateActivityLevelUseCase
 ) : ViewModel() {
 
@@ -58,56 +61,56 @@ class HealthViewModel @Inject constructor(
     }
 
     fun getRecommendations() {
-//        viewModelScope.launch {
-//            recommendationsUseCase(
-//                RecommendationRequest(
-//                    current_weight = _state.value.userProfile.weight,
-//                    height = _state.value.userProfile.height,
-//                    age = _state.value.userProfile.age,
-//                    activity_lvl = _state.value.userProfile.activityLevel,
-//                    body_goal = _state.value.userProfile.goalWeight
-//                )
-//            ).collect { result ->
-//                Log.d("HealthViewModel", result.toString())
-//                _state.update {
-//                    it.copy(
-//                        recommendations = result
-//                    )
-//                }
-//            }
-//        }
         viewModelScope.launch {
-            _state.update {
-                it.copy(
-                    recommendations = listOf(
-                        Exercise(
-                            exerciseName = "Barbell Squats",
-                            sets = 3,
-                            reps = 12,
-                            description = "Full range of motion, focus on form. Use a weight that challenges you while maintaining good technique."
-                        ),
-                        Exercise(
-                            exerciseName = "Barbell Squats",
-                            sets = 3,
-                            reps = 12,
-                            description = "Full range of motion, focus on form. Use a weight that challenges you while maintaining good technique."
-                        ),
-                        Exercise(
-                            exerciseName = "Barbell Squats",
-                            sets = 3,
-                            reps = 12,
-                            description = "Full range of motion, focus on form. Use a weight that challenges you while maintaining good technique."
-                        ),
-                        Exercise(
-                            exerciseName = "Barbell Squats",
-                            sets = 3,
-                            reps = 12,
-                            description = "Full range of motion, focus on form. Use a weight that challenges you while maintaining good technique."
-                        ),
-                    )
+            recommendationsUseCase(
+                AiRequest(
+                    weight = _state.value.userProfile.weight,
+                    height = _state.value.userProfile.height,
+                    age = _state.value.userProfile.age,
+                    activityLevel = _state.value.userProfile.activityLevel,
+                    bodyGoal = _state.value.userProfile.goalWeight
                 )
+            ).collect { result ->
+                Log.d("HealthViewModel", result.toString())
+                _state.update {
+                    it.copy(
+                        recommendations = result
+                    )
+                }
             }
         }
+//        viewModelScope.launch {
+//            _state.update {
+//                it.copy(
+//                    recommendations = listOf(
+//                        Exercise(
+//                            exerciseName = "Barbell Squats",
+//                            sets = 3,
+//                            reps = 12,
+//                            description = "Full range of motion, focus on form. Use a weight that challenges you while maintaining good technique."
+//                        ),
+//                        Exercise(
+//                            exerciseName = "Barbell Squats",
+//                            sets = 3,
+//                            reps = 12,
+//                            description = "Full range of motion, focus on form. Use a weight that challenges you while maintaining good technique."
+//                        ),
+//                        Exercise(
+//                            exerciseName = "Barbell Squats",
+//                            sets = 3,
+//                            reps = 12,
+//                            description = "Full range of motion, focus on form. Use a weight that challenges you while maintaining good technique."
+//                        ),
+//                        Exercise(
+//                            exerciseName = "Barbell Squats",
+//                            sets = 3,
+//                            reps = 12,
+//                            description = "Full range of motion, focus on form. Use a weight that challenges you while maintaining good technique."
+//                        ),
+//                    )
+//                )
+//            }
+//        }
     }
 
     private fun getHealthData() {
