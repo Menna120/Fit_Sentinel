@@ -1,4 +1,4 @@
-package com.example.fit_sentinel.domain.usecase
+package com.example.fit_sentinel.domain.usecase.steps
 
 import com.example.fit_sentinel.data.local.entity.DailyStepsEntity
 import com.example.fit_sentinel.domain.repository.DailyStepsRepository

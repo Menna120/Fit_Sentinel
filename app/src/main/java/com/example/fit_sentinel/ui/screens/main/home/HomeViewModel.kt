@@ -3,10 +3,11 @@ package com.example.fit_sentinel.ui.screens.main.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.fit_sentinel.data.local.entity.DailyStepsEntity
-import com.example.fit_sentinel.domain.usecase.GetCurrentSessionStepsUseCase
-import com.example.fit_sentinel.domain.usecase.GetStepHistoryUseCase
-import com.example.fit_sentinel.domain.usecase.StartStepTrackingUseCase
-import com.example.fit_sentinel.domain.usecase.StopStepTrackingUseCase
+import com.example.fit_sentinel.domain.usecase.sensor.StartStepTrackingUseCase
+import com.example.fit_sentinel.domain.usecase.sensor.StopStepTrackingUseCase
+import com.example.fit_sentinel.domain.usecase.steps.GetCurrentSessionStepsUseCase
+import com.example.fit_sentinel.domain.usecase.steps.GetStepHistoryUseCase
+import com.example.fit_sentinel.domain.usecase.steps.SaveStepsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

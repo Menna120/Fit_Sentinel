@@ -1,4 +1,4 @@
-package com.example.fit_sentinel.domain.usecase
+package com.example.fit_sentinel.domain.usecase.ai
 
 import com.example.fit_sentinel.data.remote.dto.AiRequest
 import com.example.fit_sentinel.data.remote.dto.Exercise

@@ -3,7 +3,7 @@ package com.example.fit_sentinel.ui.screens.main.reports
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.fit_sentinel.data.local.entity.DailyStepsEntity
-import com.example.fit_sentinel.domain.usecase.GetWeeklyStepsUseCase
+import com.example.fit_sentinel.domain.usecase.steps.GetWeeklyStepsUseCase
 import com.example.fit_sentinel.ui.screens.main.reports.model.DailyStepData
 import com.example.fit_sentinel.ui.screens.main.reports.model.DayProgress
 import dagger.hilt.android.lifecycle.HiltViewModel
