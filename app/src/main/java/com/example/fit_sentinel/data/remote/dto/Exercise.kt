@@ -1,6 +1,5 @@
 package com.example.fit_sentinel.data.remote.dto
 
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -8,5 +7,5 @@ data class Exercise(
     val reps: Int,
     val sets: Int,
     val description: String,
-    @SerialName("exercise_name") val exerciseName: String,
+    val exercise_name: String,
 )
