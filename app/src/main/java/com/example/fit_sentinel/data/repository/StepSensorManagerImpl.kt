@@ -84,11 +84,11 @@ class StepSensorManagerImpl @Inject constructor(
     }
 
     private fun determineSensorMode() {
-        stepCounterSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
-        if (stepCounterSensor != null) {
-            _currentMode.value = SensorMode.HARDWARE
-            Log.i("StepSensorManager", "Using Hardware Step Counter sensor.")
-        } else {
+//        stepCounterSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
+//        if (stepCounterSensor != null) {
+//            _currentMode.value = SensorMode.HARDWARE
+//            Log.i("StepSensorManager", "Using Hardware Step Counter sensor.")
+//        } else {
             Log.w("StepSensorManager", "Hardware Step Counter sensor not available.")
             accelerometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
             gyroscopeSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
@@ -112,7 +112,7 @@ class StepSensorManagerImpl @Inject constructor(
                     "Critical: Neither Step Counter nor Accelerometer sensor found! Step tracking unavailable."
                 )
             }
-        }
+//        }
     }
 
     override fun startListening() {
