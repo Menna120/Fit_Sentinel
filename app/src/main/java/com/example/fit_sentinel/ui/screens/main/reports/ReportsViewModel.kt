@@ -10,7 +10,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -41,66 +40,64 @@ class ReportsViewModel @Inject constructor(
         _state.update { it.copy(startDate = startDate, endDate = endDate, isLoading = true) }
 
         viewModelScope.launch {
-            getWeeklyStepsUseCase(startDate, endDate)
-                .collectLatest { fetchedData ->
-                    val dailyProgress = mutableListOf<DayProgress>()
-                    val dailyStepData = mutableListOf<DailyStepData>()
+            val fetchedData = getWeeklyStepsUseCase(startDate, endDate)
+            val dailyProgress = mutableListOf<DayProgress>()
+            val dailyStepData = mutableListOf<DailyStepData>()
 
-                    var totalSteps = 0.0
-                    var totalMinutes = 0L
-                    var totalCals = 0.0
-                    var totalDistance = 0.0
+            var totalSteps = 0.0
+            var totalMinutes = 0L
+            var totalCals = 0.0
+            var totalDistance = 0.0
 
-                    var currentDate = startDate
-                    while (!currentDate.isAfter(endDate)) {
-                        val entityForDate = fetchedData.find { it.date == currentDate }
+            var currentDate = startDate
+            while (!currentDate.isAfter(endDate)) {
+                val entityForDate = fetchedData.find { it.date == currentDate }
 
-                        val progress =
-                            (entityForDate?.totalSteps?.toFloat() ?: 0f) / _state.value.targetSteps
-                        dailyProgress.add(
-                            DayProgress(
-                                dayOfMonth = currentDate.dayOfMonth,
-                                progress = progress.coerceIn(0f, 1f)
-                            )
-                        )
+                val progress =
+                    (entityForDate?.totalSteps?.toFloat() ?: 0f) / _state.value.targetSteps
+                dailyProgress.add(
+                    DayProgress(
+                        dayOfMonth = currentDate.dayOfMonth,
+                        progress = progress.coerceIn(0f, 1f)
+                    )
+                )
 
-                        dailyStepData.add(
-                            DailyStepData(
-                                dayLabel = entityForDate?.caloriesBurned ?: 0.0,
-                                steps = entityForDate?.totalSteps?.toDouble() ?: 0.0
-                            )
-                        )
+                dailyStepData.add(
+                    DailyStepData(
+                        dayLabel = entityForDate?.caloriesBurned ?: 0.0,
+                        steps = entityForDate?.totalSteps?.toDouble() ?: 0.0
+                    )
+                )
 
-                        entityForDate?.let {
-                            totalSteps += it.totalSteps
-                            totalMinutes += it.estimatedTimeMinutes ?: 0L
-                            totalCals += it.caloriesBurned ?: 0.0
-                            totalDistance += it.distanceKm ?: 0.0
-                        }
-
-                        currentDate = currentDate.plusDays(1)
-                    }
-
-                    val totalTimeFormatted =
-                        if (totalMinutes > 0L) "${totalMinutes / 60}h ${totalMinutes % 60}m" else "0h 0m"
-                    val totalCaloriesFormatted =
-                        if (totalCals > 0) "${totalCals.roundToInt()} kcal" else "0 kcal"
-                    val totalDistanceFormatted =
-                        if (totalDistance > 0) "%.1f km".format(totalDistance) else "0.0 km"
-
-                    _state.update {
-                        it.copy(
-                            weeklyStepsData = fetchedData,
-                            dailyProgressList = dailyProgress,
-                            dailyStepDataList = dailyStepData,
-                            totalStepsThisWeek = totalSteps,
-                            totalTimeThisWeek = totalTimeFormatted,
-                            totalCaloriesThisWeek = totalCaloriesFormatted,
-                            totalDistanceThisWeek = totalDistanceFormatted,
-                            isLoading = false
-                        )
-                    }
+                entityForDate?.let {
+                    totalSteps += it.totalSteps
+                    totalMinutes += it.estimatedTimeMinutes ?: 0L
+                    totalCals += it.caloriesBurned ?: 0.0
+                    totalDistance += it.distanceKm ?: 0.0
                 }
+
+                currentDate = currentDate.plusDays(1)
+            }
+
+            val totalTimeFormatted =
+                if (totalMinutes > 0L) "${totalMinutes / 60}h ${totalMinutes % 60}m" else "0h 0m"
+            val totalCaloriesFormatted =
+                if (totalCals > 0) "${totalCals.roundToInt()} kcal" else "0 kcal"
+            val totalDistanceFormatted =
+                if (totalDistance > 0) "%.1f km".format(totalDistance) else "0.0 km"
+
+            _state.update {
+                it.copy(
+                    weeklyStepsData = fetchedData,
+                    dailyProgressList = dailyProgress,
+                    dailyStepDataList = dailyStepData,
+                    totalStepsThisWeek = totalSteps,
+                    totalTimeThisWeek = totalTimeFormatted,
+                    totalCaloriesThisWeek = totalCaloriesFormatted,
+                    totalDistanceThisWeek = totalDistanceFormatted,
+                    isLoading = false
+                )
+            }
         }
     }
 

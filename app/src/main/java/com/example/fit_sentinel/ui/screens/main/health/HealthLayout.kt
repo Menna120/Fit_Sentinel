@@ -49,7 +49,7 @@ fun HealthLayout(
         ) {
             itemsIndexed(exercises) { index, exercise ->
                 ExerciseCard(
-                    exerciseName = exercise.exerciseName,
+                    exerciseName = exercise.exercise_name,
                     sets = exercise.sets,
                     reps = exercise.reps,
                     modifier = Modifier.clickable { onExerciseClick(index) },
@@ -68,25 +68,25 @@ private fun HealthLayoutPreview() {
             categoryLabel = "Healthy weight",
             exercises = listOf(
                 Exercise(
-                    exerciseName = "Barbell Squats",
+                    exercise_name = "Barbell Squats",
                     sets = 3,
                     reps = 12,
                     description = "Full range of motion, focus on form. Use a weight that challenges you while maintaining good technique."
                 ),
                 Exercise(
-                    exerciseName = "Barbell Squats",
+                    exercise_name = "Barbell Squats",
                     sets = 3,
                     reps = 12,
                     description = "Full range of motion, focus on form. Use a weight that challenges you while maintaining good technique."
                 ),
                 Exercise(
-                    exerciseName = "Barbell Squats",
+                    exercise_name = "Barbell Squats",
                     sets = 3,
                     reps = 12,
                     description = "Full range of motion, focus on form. Use a weight that challenges you while maintaining good technique."
                 ),
                 Exercise(
-                    exerciseName = "Barbell Squats",
+                    exercise_name = "Barbell Squats",
                     sets = 3,
                     reps = 12,
                     description = "Full range of motion, focus on form. Use a weight that challenges you while maintaining good technique."

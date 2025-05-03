@@ -8,8 +8,8 @@ interface DailyStepsRepository {
     fun getAllDailySteps(): Flow<List<DailyStepsEntity>>
     suspend fun insertOrUpdateDailySteps(dailySteps: DailyStepsEntity)
     suspend fun getDailySteps(date: LocalDate): DailyStepsEntity?
-    fun getDailyStepsForDateRange(
+    suspend fun getDailyStepsForDateRange(
         startDate: LocalDate,
         endDate: LocalDate
-    ): Flow<List<DailyStepsEntity>>
+    ): List<DailyStepsEntity>
 }

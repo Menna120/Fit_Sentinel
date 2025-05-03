@@ -4,7 +4,6 @@ import com.example.fit_sentinel.data.local.dao.DailyStepsDao
 import com.example.fit_sentinel.data.local.entity.DailyStepsEntity
 import com.example.fit_sentinel.domain.repository.DailyStepsRepository
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -24,12 +23,10 @@ class DailyStepsRepositoryImpl @Inject constructor(
         return dailyStepsDao.getDailySteps(date)
     }
 
-    override fun getDailyStepsForDateRange(
+    override suspend fun getDailyStepsForDateRange(
         startDate: LocalDate,
         endDate: LocalDate
-    ): Flow<List<DailyStepsEntity>> {
-        return dailyStepsDao.getAllDailySteps().map { allSteps ->
-            allSteps.filter { it.date >= startDate && it.date <= endDate }
-        }
+    ): List<DailyStepsEntity> {
+        return dailyStepsDao.getStepsBetween(startDate, endDate)
     }
 }

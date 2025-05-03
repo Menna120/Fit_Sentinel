@@ -64,11 +64,11 @@ class HealthViewModel @Inject constructor(
         viewModelScope.launch {
             recommendationsUseCase(
                 AiRequest(
-                    weight = _state.value.userProfile.weight,
+                    current_weight = _state.value.userProfile.weight,
                     height = _state.value.userProfile.height,
                     age = _state.value.userProfile.age,
-                    activityLevel = _state.value.userProfile.activityLevel,
-                    bodyGoal = _state.value.userProfile.goalWeight
+                    activity_lvl = _state.value.userProfile.activityLevel,
+                    body_goal = _state.value.userProfile.goalWeight
                 )
             ).collect { result ->
                 Log.d("HealthViewModel", result.toString())

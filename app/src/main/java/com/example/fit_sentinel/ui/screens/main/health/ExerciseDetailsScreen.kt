@@ -76,7 +76,7 @@ fun ExerciseDetailsLayout(
                     verticalArrangement = Arrangement.spacedBy(32.dp)
                 ) {
                     Text(
-                        exercisesList[page].exerciseName,
+                        exercisesList[page].exercise_name,
                         style = MaterialTheme.typography.headlineMedium,
                         color = MaterialTheme.colorScheme.primary
                     )
@@ -148,25 +148,25 @@ private fun ExerciseDetailsLayoutPreview() {
             index = 2,
             exercisesList = listOf(
                 Exercise(
-                    exerciseName = "Barbell Squats",
+                    exercise_name = "Barbell Squats",
                     sets = 3,
                     reps = 12,
                     description = "Full range of motion, focus on form. Use a weight that challenges you while maintaining good technique."
                 ),
                 Exercise(
-                    exerciseName = "Barbell Squats",
+                    exercise_name = "Barbell Squats",
                     sets = 5,
                     reps = 12,
                     description = "Full range of motion, focus on form. Use a weight that challenges you while maintaining good technique."
                 ),
                 Exercise(
-                    exerciseName = "Barbell Squats",
+                    exercise_name = "Barbell Squats",
                     sets = 3,
                     reps = 12,
                     description = "Full range of motion, focus on form. Use a weight that challenges you while maintaining good technique."
                 ),
                 Exercise(
-                    exerciseName = "Barbell Squats",
+                    exercise_name = "Barbell Squats",
                     sets = 3,
                     reps = 12,
                     description = "Full range of motion, focus on form. Use a weight that challenges you while maintaining good technique."
