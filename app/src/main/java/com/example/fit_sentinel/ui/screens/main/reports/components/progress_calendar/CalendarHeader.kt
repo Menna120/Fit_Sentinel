@@ -34,7 +34,7 @@ fun CalendarHeader() {
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun CalendarHeaderPreview() {
     Fit_SentinelTheme {

@@ -6,6 +6,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import com.example.fit_sentinel.domain.model.HeightUnit
+import com.example.fit_sentinel.ui.theme.Fit_SentinelTheme
 
 @Composable
 fun <T> EditMeasuresCard(
@@ -28,6 +31,21 @@ fun <T> EditMeasuresCard(
             value = value,
             onSelectedUnitChange = { unit = it },
             onValueChange = { value = it }
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun EditMeasuresCardPreview() {
+    Fit_SentinelTheme {
+        EditMeasuresCard(
+            "Height : ",
+            onDismiss = { },
+            onSubmit = { _, _ -> },
+            currentValue = "120",
+            units = HeightUnit.entries,
+            selectedUnit = HeightUnit.Cm
         )
     }
 }

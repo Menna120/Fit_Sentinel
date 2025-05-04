@@ -1,5 +1,7 @@
 package com.example.fit_sentinel.nav.nav_graph
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
@@ -18,6 +20,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.fit_sentinel.nav.bottom_nav_bar.BottomNavBar
 import com.example.fit_sentinel.nav.bottom_nav_bar.navItems
 
+@RequiresApi(Build.VERSION_CODES.Q)
 @Composable
 fun AppNavGraph(
     startDestination: Any,

@@ -1,5 +1,7 @@
 package com.example.fit_sentinel.nav.nav_graph
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -13,6 +15,7 @@ import com.example.fit_sentinel.ui.screens.main.reports.ReportsScreen
 import com.example.fit_sentinel.ui.screens.main.settings.SettingScreen
 import com.example.fit_sentinel.ui.screens.on_boarding.OnboardingScreen
 
+@RequiresApi(Build.VERSION_CODES.Q)
 fun NavGraphBuilder.mainNavigation(
     navController: NavController,
 ) {

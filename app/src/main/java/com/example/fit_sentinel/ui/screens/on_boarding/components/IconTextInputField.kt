@@ -11,13 +11,19 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.fit_sentinel.R
+import com.example.fit_sentinel.ui.theme.Fit_SentinelTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -62,4 +68,13 @@ fun IconTextInputField(
         shape = shape,
         singleLine = true
     )
+}
+
+@Preview
+@Composable
+private fun IconTextInputFieldPreview() {
+    var name by remember { mutableStateOf("") }
+    Fit_SentinelTheme {
+        IconTextInputField(name, { name = it }, "name")
+    }
 }

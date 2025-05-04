@@ -164,17 +164,6 @@ fun ScaleIndicatorBar(
                     )
                     currentThreshold = segment.maxThreshold
                 }
-
-                if (currentThreshold < maxValue) {
-                    val remainingRange = maxValue - currentThreshold
-                    val remainingWeight = if (totalRange > 0) remainingRange / totalRange else 0f
-                    Spacer(
-                        modifier = Modifier
-                            .weight(remainingWeight.coerceAtLeast(0f))
-                            .background(bmiSegments.lastOrNull()?.color ?: Color.Transparent)
-                            .fillMaxHeight()
-                    )
-                }
             }
             Spacer(modifier = Modifier.height(16.dp))
         }

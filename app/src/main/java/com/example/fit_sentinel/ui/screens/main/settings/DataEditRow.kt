@@ -1,19 +1,17 @@
 package com.example.fit_sentinel.ui.screens.main.settings
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -55,16 +53,15 @@ fun DataEditRow(
                 color = MaterialTheme.colorScheme.onBackground, // Or a suitable text color
                 modifier = Modifier.weight(1f) // Allow the text to take up available space
             )
-            Icon(
-                painter = painterResource(id = R.drawable.edit_settings), // Replace with your edit icon,
-                contentDescription = "Edit $label",
-                tint = MaterialTheme.colorScheme.primary, // Or a suitable icon color
-                modifier = Modifier
-                    .size(36.dp)
-                    .clickable { onEditClick() }
-            )
+            IconButton({ onEditClick() }) {
+                Icon(
+                    painter = painterResource(id = R.drawable.edit_settings), // Replace with your edit icon,
+                    contentDescription = "Edit $label",
+                    tint = MaterialTheme.colorScheme.primary, // Or a suitable icon color
+                    modifier = Modifier.size(36.dp)
+                )
+            }
         }
-        Spacer(modifier = Modifier.height(16.dp)) // Space between rows
     }
 }
 

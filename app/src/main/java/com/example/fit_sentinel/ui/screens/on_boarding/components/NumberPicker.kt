@@ -37,7 +37,7 @@ fun NumberPicker(
     )
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun NumberPickerPreview() {
     var selectedValue by remember { mutableIntStateOf(270) }

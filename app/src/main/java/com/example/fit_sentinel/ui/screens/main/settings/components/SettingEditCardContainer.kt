@@ -2,9 +2,7 @@ package com.example.fit_sentinel.ui.screens.main.settings.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,12 +20,10 @@ fun SettingEditCardContainer(
     EditDataCardContainer(onDismiss, modifier) {
         Column(
             modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(50.dp)
         ) {
 
             content()
-
-            Spacer(Modifier.size(50.dp))
 
             MainButton(
                 "Submit",

@@ -7,6 +7,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -15,7 +16,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import com.example.fit_sentinel.domain.model.Gender
+import com.example.fit_sentinel.ui.theme.Fit_SentinelTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -40,16 +43,17 @@ fun EditGenderCard(
                 readOnly = true,
                 label = { Text("Gender") },
                 textStyle = MaterialTheme.typography.titleMedium,
-                trailingIcon = {
-                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
-                },
-                modifier = Modifier.fillMaxWidth(),
+                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .menuAnchor(MenuAnchorType.PrimaryNotEditable),
                 shape = CircleShape
             )
 
             ExposedDropdownMenu(
                 expanded = expanded,
-                onDismissRequest = { expanded = false }
+                onDismissRequest = { expanded = false },
+                containerColor = MaterialTheme.colorScheme.background
             ) {
                 gender.forEach { gender ->
                     DropdownMenuItem(
@@ -57,10 +61,23 @@ fun EditGenderCard(
                         onClick = {
                             selectedGender = gender
                             expanded = false
-                        }
+                        },
+                        contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
                     )
                 }
             }
         }
+    }
+}
+
+@Preview
+@Composable
+private fun EditGenderCardPreview() {
+    Fit_SentinelTheme {
+        EditGenderCard(
+            currentGender = Gender.Male,
+            onDismiss = {},
+            onSubmit = {}
+        )
     }
 }
