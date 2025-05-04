@@ -80,28 +80,16 @@ class HomeViewModel @Inject constructor(
             ) { selectedDate, history, currentSessionSteps, isRecording ->
                 val selectedDayData = history.find { it.date == selectedDate }
 
-                val totalSteps: Int
-                val distance: String
-                val calories: String
-                val time: String
-
                 val savedTodaySteps = history.find { it.date == LocalDate.now() }?.totalSteps ?: 0
 
-                if (selectedDate == LocalDate.now()) {
-                    totalSteps =
-                        if (!isRecording) savedTodaySteps
-                        else savedTodaySteps + currentSessionSteps
+                val totalSteps = if (selectedDate == LocalDate.now()) {
+                    if (!isRecording) savedTodaySteps
+                    else savedTodaySteps + currentSessionSteps
+                } else selectedDayData?.totalSteps ?: 0
 
-                    distance = selectedDayData?.distanceKm?.format(1) ?: "0.0"
-                    calories = selectedDayData?.caloriesBurned?.roundToInt()?.toString() ?: "0"
-                    time = formatMinutesToHoursAndMinutes(selectedDayData?.estimatedTimeMinutes)
-
-                } else {
-                    totalSteps = selectedDayData?.totalSteps ?: 0
-                    distance = selectedDayData?.distanceKm?.format(1) ?: "0.0"
-                    calories = selectedDayData?.caloriesBurned?.roundToInt()?.toString() ?: "0"
-                    time = formatMinutesToHoursAndMinutes(selectedDayData?.estimatedTimeMinutes)
-                }
+                val distance = selectedDayData?.distanceKm?.format(1) ?: "0.0"
+                val calories = selectedDayData?.caloriesBurned?.roundToInt()?.toString() ?: "0"
+                val time = formatMinutesToHoursAndMinutes(selectedDayData?.estimatedTimeMinutes)
 
                 _uiState.update {
                     it.copy(

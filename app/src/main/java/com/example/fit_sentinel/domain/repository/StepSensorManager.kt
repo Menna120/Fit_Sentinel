@@ -10,4 +10,5 @@ interface StepSensorManager {
     val sensorMode: Flow<SensorMode>
     fun startListening()
     fun stopListening()
+    fun resetSensors()
 }

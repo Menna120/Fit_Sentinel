@@ -89,29 +89,29 @@ class StepSensorManagerImpl @Inject constructor(
 //            _currentMode.value = SensorMode.HARDWARE
 //            Log.i("StepSensorManager", "Using Hardware Step Counter sensor.")
 //        } else {
-            Log.w("StepSensorManager", "Hardware Step Counter sensor not available.")
-            accelerometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
-            gyroscopeSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
-            if (accelerometerSensor != null) {
-                _currentMode.value = SensorMode.ACCELEROMETER
-                isGyroAvailableForAccel = gyroscopeSensor != null // Set flag
-                if (isGyroAvailableForAccel) {
-                    Log.i("StepSensorManager", "Falling back to Accelerometer + Gyroscope sensors.")
-                } else {
-                    Log.w(
-                        "StepSensorManager",
-                        "Falling back to Accelerometer sensor (Gyroscope not available). Accuracy may be lower."
-                    )
-                    // Note: Step detection without gyro orientation correction is highly susceptible to device tilt.
-                    // The verticalAccelThreshold will need careful tuning or a different approach might be needed.
-                }
+        Log.w("StepSensorManager", "Hardware Step Counter sensor not available.")
+        accelerometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+        gyroscopeSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
+        if (accelerometerSensor != null) {
+            _currentMode.value = SensorMode.ACCELEROMETER
+            isGyroAvailableForAccel = gyroscopeSensor != null // Set flag
+            if (isGyroAvailableForAccel) {
+                Log.i("StepSensorManager", "Falling back to Accelerometer + Gyroscope sensors.")
             } else {
-                _currentMode.value = SensorMode.UNAVAILABLE
-                Log.e(
+                Log.w(
                     "StepSensorManager",
-                    "Critical: Neither Step Counter nor Accelerometer sensor found! Step tracking unavailable."
+                    "Falling back to Accelerometer sensor (Gyroscope not available). Accuracy may be lower."
                 )
+                // Note: Step detection without gyro orientation correction is highly susceptible to device tilt.
+                // The verticalAccelThreshold will need careful tuning or a different approach might be needed.
             }
+        } else {
+            _currentMode.value = SensorMode.UNAVAILABLE
+            Log.e(
+                "StepSensorManager",
+                "Critical: Neither Step Counter nor Accelerometer sensor found! Step tracking unavailable."
+            )
+        }
 //        }
     }
 
@@ -188,6 +188,12 @@ class StepSensorManagerImpl @Inject constructor(
     override fun stopListening() {
         sensorManager.unregisterListener(this)
         Log.d("StepSensorManager", "Unregistered sensor listeners.")
+    }
+
+    override fun resetSensors() {
+        if (_currentMode.value == SensorMode.HARDWARE)
+            initialHardwareSteps = _sessionSteps.value.toFloat()
+        _sessionSteps.value = 0
     }
 
     override fun onSensorChanged(event: SensorEvent?) {
