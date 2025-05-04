@@ -187,12 +187,13 @@ class StepSensorManagerImpl @Inject constructor(
 
     override fun stopListening() {
         sensorManager.unregisterListener(this)
+        resetSensors()
         Log.d("StepSensorManager", "Unregistered sensor listeners.")
     }
 
     override fun resetSensors() {
         if (_currentMode.value == SensorMode.HARDWARE)
-            initialHardwareSteps = _sessionSteps.value.toFloat()
+            initialHardwareSteps = null
         _sessionSteps.value = 0
     }
 

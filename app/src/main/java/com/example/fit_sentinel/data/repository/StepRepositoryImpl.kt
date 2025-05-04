@@ -72,9 +72,8 @@ class StepRepositoryImpl @Inject constructor(
         applicationScope.launch {
             stepsFromSensor.collect {
                 saveSteps(it)
+                stepSensorManager.stopListening()
             }
-        }.invokeOnCompletion {
-            stepSensorManager.stopListening()
         }
     }
 }

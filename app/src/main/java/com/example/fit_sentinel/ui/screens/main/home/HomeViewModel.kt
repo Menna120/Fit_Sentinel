@@ -142,16 +142,16 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun startStepTracking() {
-        _uiState.update { it.copy(isRecording = true) }
         startStepTrackingUseCase()
+        _uiState.update { it.copy(isRecording = true) }
         viewModelScope.launch {
             _toastEvent.emit(HomeToastEvent.SessionStarted)
         }
     }
 
     private fun stopStepTracking() {
-        _uiState.update { it.copy(isRecording = false) }
         stopStepTrackingUseCase()
+        _uiState.update { it.copy(isRecording = false) }
         viewModelScope.launch {
             _toastEvent.emit(HomeToastEvent.SessionEnded)
         }
