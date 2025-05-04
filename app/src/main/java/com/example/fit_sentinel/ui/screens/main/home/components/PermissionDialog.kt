@@ -8,14 +8,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
-enum class PermissionState {
-    UNKNOWN,
-    GRANTED,
-    DENIED_RATIONALE,
-    DENIED_PERMANENT,
-    REQUESTING
-}
-
 data class PermissionDialogRequest(
     val permission: String,
     val isPermanentlyDeclined: Boolean,

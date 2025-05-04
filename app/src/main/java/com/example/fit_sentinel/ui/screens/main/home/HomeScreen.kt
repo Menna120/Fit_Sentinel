@@ -1,12 +1,13 @@
 package com.example.fit_sentinel.ui.screens.main.home
 
 import android.Manifest
-import android.app.Activity
+import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
-import androidx.activity.compose.LocalActivity
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
+import android.provider.Settings
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.runtime.Composable
@@ -14,67 +15,53 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.core.app.ActivityCompat
+import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.fit_sentinel.ui.screens.main.home.components.PermissionDialog
-import com.example.fit_sentinel.ui.screens.main.home.components.PermissionState
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberPermissionState
+import com.google.accompanist.permissions.shouldShowRationale
+import kotlinx.coroutines.flow.collectLatest
 
 @RequiresApi(Build.VERSION_CODES.Q)
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
-    val activity = LocalActivity.current as Activity
-    val permissionsToRequest = Manifest.permission.ACTIVITY_RECOGNITION
-
+    val context = LocalContext.current
+    val activityRecognitionPermissionState =
+        rememberPermissionState(Manifest.permission.ACTIVITY_RECOGNITION)
     val uiState by viewModel.uiState.collectAsState()
-    val dialogQueue = viewModel.visiblePermissionDialogQueue.toList()
-    val permissionState by viewModel.activityRecognitionPermissionState.collectAsState()
+    val currentPermissionDialogRequest by viewModel.currentPermissionDialogRequest.collectAsState()
 
-    val activityRecognitionPermissionResultLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission(),
-        onResult = { isGranted ->
-            val shouldShowRationale = ActivityCompat.shouldShowRequestPermissionRationale(
-                activity,
-                permissionsToRequest
-            )
-            viewModel.onPermissionStatusDetermined(
-                permission = permissionsToRequest,
-                isGranted = isGranted,
-                shouldShowRationale = shouldShowRationale
-            )
-        }
-    )
-
-    LaunchedEffect(Unit) {
+    LaunchedEffect(true) {
         val isGranted = ContextCompat.checkSelfPermission(
-            activity,
-            permissionsToRequest
+            context,
+            Manifest.permission.ACTIVITY_RECOGNITION
         ) == PackageManager.PERMISSION_GRANTED
-        val shouldShowRationale =
-            ActivityCompat.shouldShowRequestPermissionRationale(activity, permissionsToRequest)
+        val shouldShowRationale = activityRecognitionPermissionState.status.shouldShowRationale
 
-        viewModel.onPermissionStatusDetermined(
-            permission = permissionsToRequest,
-            isGranted = isGranted,
-            shouldShowRationale = shouldShowRationale
-        )
         if (!isGranted && !shouldShowRationale) {
-            activityRecognitionPermissionResultLauncher.launch(permissionsToRequest)
-        }
-    }
-
-    LaunchedEffect(viewModel.requestPermissionEvent) {
-        viewModel.requestPermissionEvent.collect { permission ->
-            activityRecognitionPermissionResultLauncher.launch(permission)
+            activityRecognitionPermissionState.launchPermissionRequest()
         }
     }
 
     LaunchedEffect(viewModel.navigateToSettings) {
         viewModel.navigateToSettings.collect {
-            activity.openAppSettings()
+            openAppSettings(context)
+        }
+    }
+
+    LaunchedEffect(viewModel.toastEvent) {
+        viewModel.toastEvent.collectLatest { event ->
+            val message = when (event) {
+                HomeToastEvent.SessionStarted -> "Session Started"
+                HomeToastEvent.SessionEnded -> "Session Ended"
+            }
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -90,22 +77,29 @@ fun HomeScreen(
         onNextMonth = viewModel::onNextWeekClicked,
         onDateSelected = viewModel::onDateSelected,
         onButtonClick = {
-            viewModel.onStepProgressButtonClicked(activity, permissionsToRequest)
+            viewModel.onStepProgressButtonClicked(activityRecognitionPermissionState.status)
         },
         modifier = modifier
     )
-    AnimatedVisibility(permissionState == PermissionState.DENIED_RATIONALE || permissionState == PermissionState.DENIED_PERMANENT) {
-        dialogQueue.forEach { request ->
+
+    AnimatedVisibility(visible = currentPermissionDialogRequest != null) {
+        currentPermissionDialogRequest?.let { request ->
             PermissionDialog(
                 request = request,
                 onDismiss = viewModel::dismissDialog,
                 onOkClick = {
-                    viewModel.onPermissionRationaleOkClick(request.permission)
+                    viewModel.onPermissionRationaleOkClick()
+                    activityRecognitionPermissionState.launchPermissionRequest()
                 },
-                onGoToAppSettingsClick = {
-                    viewModel.onPermissionPermanentlyDeclinedSettingsClick()
-                }
+                onGoToAppSettingsClick = viewModel::onPermissionPermanentlyDeclinedSettingsClick
             )
         }
     }
+}
+
+fun openAppSettings(context: Context) {
+    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+        data = Uri.fromParts("package", context.packageName, null)
+    }
+    context.startActivity(intent)
 }
