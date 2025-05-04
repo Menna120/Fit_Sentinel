@@ -9,6 +9,7 @@ import com.example.fit_sentinel.domain.repository.StepRepository
 import com.example.fit_sentinel.domain.repository.StepSensorManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
@@ -20,7 +21,7 @@ class StepRepositoryImpl @Inject constructor(
     private val stepMetricsRepo: StepMetricsRepository
 ) : StepRepository {
 
-    override val stepsFromSensor: Flow<Int> = stepSensorManager.currentSteps
+    override val stepsFromSensor: StateFlow<Int> = stepSensorManager.currentSteps
     override val isSensorAvailable: Boolean = stepSensorManager.isSensorAvailable
     override val sensorMode: Flow<SensorMode> = stepSensorManager.sensorMode
 
@@ -69,11 +70,12 @@ class StepRepositoryImpl @Inject constructor(
     override fun startStepTracking() = stepSensorManager.startListening()
 
     override fun stopStepTracking() {
+        stepSensorManager.stopListening()
+
+        val finalSteps = stepsFromSensor.value
+        Log.d("StepRepository", "Final Steps: $finalSteps")
         applicationScope.launch {
-            stepsFromSensor.collect {
-                saveSteps(it)
-                stepSensorManager.stopListening()
-            }
+            saveSteps(finalSteps)
         }
     }
 }

@@ -46,7 +46,7 @@ fun BottomNavBar(
             navItems.forEach { item ->
                 val selected = isSelected(item)
 
-                val indicatorBackgroundColor by animateColorAsState(
+                val indicatorColor by animateColorAsState(
                     targetValue = if (selected) MaterialTheme.colorScheme.background else Color.Transparent,
                     label = "indicator background color animation"
                 )
@@ -59,13 +59,9 @@ fun BottomNavBar(
                             imageVector = ImageVector.vectorResource(id = item.icon),
                             contentDescription = "",
                             modifier = Modifier
-                                .then(
-                                    if (selected) Modifier
-                                        .clip(CircleShape)
-                                        .background(indicatorBackgroundColor)
-                                        .padding(8.dp)
-                                    else Modifier
-                                ),
+                                .clip(CircleShape)
+                                .background(indicatorColor)
+                                .padding(8.dp)
                         )
                     },
                     colors = NavigationBarItemDefaults.colors(
