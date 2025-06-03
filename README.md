@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/7a445e88-dc12-4130-bc89-4196642e7f06)# Fit Sentinel 🛡️👟
+# Fit Sentinel 🛡️👟
 
 **Your Smart Step Counter & Fitness Guardian**
 
@@ -30,7 +30,7 @@
 
 | Dashboard | Step Counter |   |
 | --------- | ------------ | - |
-| ![Dashboard](![image](https://github.com/user-attachments/assets/55b056c2-2a6f-4d58-b9cc-67b7c0e9acd5)) | ![Step Counter](https://www.figma.com/design/qUijDQn22xHJLTJfBfKqB1/Step-Counter-App?node-id=67-425&t=o5rNmcXPoahbvI6e-4) |   |
+| ![image](https://github.com/user-attachments/assets/7a445e88-dc12-4130-bc89-4196642e7f06) | ![image](https://github.com/user-attachments/assets/7a445e88-dc12-4130-bc89-4196642e7f06) |   |
 
 ---
 
